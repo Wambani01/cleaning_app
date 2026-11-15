@@ -1,14 +1,22 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource/cardo/400.css";
+@import "@fontsource/cardo/700.css";
 
-/* Single source of truth for brand colours. Replace with the Lloyd Cleaning Services values. */
+/* Brand tokens taken from lloydcleaningservices.nl. Single source of truth. */
 @theme {
-  --color-primary: #0b5fa5;
-  --color-primary-dark: #084a82;
-  --color-accent: #f5a623;
-  --color-ink: #12263a;
-  --color-muted: #5b6b7b;
-  --color-surface: #f6f9fc;
-  --color-line: #dbe4ec;
+  --color-primary: #10b1c7;       /* buttons / highlights on the Lloyd site */
+  --color-primary-dark: #0a8a9b;  /* logo's darker teal; use for text and links */
+  --color-primary-deep: #076170;  /* hero gradient end */
+  --color-mint: #71ebe3;
+  --color-accent: #d8613c;
+  --color-ink: #111111;
+  --color-muted: #636363;
+  --color-surface: #f9f9f9;
+  --color-line: #d4d4d4;
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-heading: "Cardo", Georgia, serif;
 }
 
-body { @apply bg-surface text-ink antialiased; }
+body { @apply bg-surface font-sans text-ink antialiased; }
+h1, h2, h3 { font-family: var(--font-heading); }

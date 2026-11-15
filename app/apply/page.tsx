@@ -16,7 +16,7 @@ export default function Apply() {
         <Field label="Area"><select name="area" className={inputClass}>{areas.map(a => <option key={a}>{a}</option>)}</select></Field>
         <Field label="Experience"><textarea name="exp" rows={4} className={inputClass} /></Field>
         <Note>Never send ID documents by email. We will give you a secure upload link after the interview.</Note>
-        <button disabled className="rounded-lg bg-accent px-6 py-3 font-bold text-ink opacity-60">Submit (coming soon)</button>
+        <button disabled className="rounded-lg bg-primary px-6 py-3 font-bold text-ink opacity-60">Submit (coming soon)</button>
       </form>
     </Container></main>
   );

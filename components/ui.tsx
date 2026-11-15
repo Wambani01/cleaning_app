@@ -2,7 +2,8 @@ import Link from "next/link";
 import type { ComponentProps } from "react";
 
 export const brandName = "Lloyd Cleaning";
-export const tagline = "Affordable regular cleaners in Amsterdam, with a backup and breakage cover.";
+export const tagline = "Affordable regular cleaners in Amsterdam, with a backup and breakage cover."
+export const slogan = "A clean life is a happy life!";
 export const price = "€15";
 
 export function Container({ children }: { children: React.ReactNode }) {
@@ -10,7 +11,7 @@ export function Container({ children }: { children: React.ReactNode }) {
 }
 
 export function Button({ href, variant = "accent", children }: { href: string; variant?: "accent" | "light"; children: React.ReactNode }) {
-  const styles = variant === "accent" ? "bg-accent text-ink" : "bg-white text-primary";
+  const styles = variant === "accent" ? "bg-primary text-ink hover:bg-mint" : "bg-white text-primary-deep";
   return <Link href={href} className={`inline-block rounded-lg px-6 py-3 font-bold ${styles}`}>{children}</Link>;
 }
 
@@ -19,7 +20,7 @@ export function Card({ children }: { children: React.ReactNode }) {
 }
 
 export function Note({ children }: { children: React.ReactNode }) {
-  return <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm">{children}</p>;
+  return <p className="rounded-lg border border-primary/40 bg-primary/10 px-4 py-3 text-sm">{children}</p>;
 }
 
 export function Field({ label, children }: { label: string; children: React.ReactNode }) {

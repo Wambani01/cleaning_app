@@ -1,5 +1,6 @@
 import "./globals.css";
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { Container, brandName, tagline } from "@/components/ui";
 
@@ -15,7 +16,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="border-b border-line bg-white">
           <Container>
             <div className="flex h-16 items-center justify-between">
-              <Link href="/" className="text-xl font-extrabold text-primary">{brandName}</Link>
+              <Link href="/" className="flex items-center gap-3 font-heading text-xl font-bold text-primary-dark">
+                <Image src="/logo.png" alt="" width={46} height={50} priority />{brandName}
+              </Link>
               <nav className="flex gap-5 font-medium">
                 <Link href="/join">Become a member</Link>
                 <Link href="/apply">Work with us</Link>

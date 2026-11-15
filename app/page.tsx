@@ -1,4 +1,4 @@
-import { Button, Card, Container, price, tagline } from "@/components/ui";
+import { Button, Card, Container, price, slogan, tagline } from "@/components/ui";
 
 const features = [
   { t: "Affordable regular cleaners", d: "The same vetted cleaner every visit, at a fair hourly rate." },
@@ -9,8 +9,9 @@ const features = [
 export default function Home() {
   return (
     <main>
-      <div className="bg-gradient-to-br from-primary to-primary-dark py-20 text-white">
+      <div className="bg-gradient-to-br from-primary-dark to-primary-deep py-20 text-white">
         <Container>
+          <p className="mb-3 font-heading text-xl italic text-mint">{slogan}</p>
           <h1 className="mb-4 text-4xl font-extrabold leading-tight sm:text-5xl">{tagline}</h1>
           <p className="mb-8 max-w-xl text-lg opacity-95">Join for {price} a month and get access to trusted cleaners across Amsterdam.</p>
           <div className="flex flex-wrap gap-3">
