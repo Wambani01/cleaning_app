@@ -1,7 +1,7 @@
 import { BadgeCheck, CalendarClock, ClipboardList, FileCheck, HeartHandshake, Headset, IdCard, MapPin, Repeat, Rocket, Send, ShieldCheck, Video } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Card, Container, Field, Input, Note, inputClass } from "@/components/ui";
-export const metadata = { title: "Work with us" };
+export const metadata = { title: "Work as a cleaner" };
 
 const areas = ["Amsterdam Centrum", "Noord", "Oost", "Zuid", "West", "Nieuw-West", "Zuidoost"];
 
