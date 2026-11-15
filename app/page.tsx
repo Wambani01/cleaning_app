@@ -13,6 +13,7 @@ const steps = [
   { t: "Join", d: `Sign up for the ${price} per month membership.` },
   { t: "Tell us what you need", d: "Your address, how often, and any preferences." },
   { t: "Meet your cleaner", d: "We match you with a regular cleaner and a backup." },
+  { t: "Orientation call", d: "We call you to go through your needs, your home and what to expect, before the first visit." },
   { t: "Relax", d: `Pay ${hourlyRate} per hour for each visit. Cancel the membership any time.` },
 ];
 
@@ -57,7 +58,7 @@ export default function Home() {
 
       <section className="pb-14"><Container>
         <h2 className="mb-6 text-3xl font-bold">How it works</h2>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {steps.map((s, i) => (
             <Card key={s.t}>
               <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-primary font-bold">{i + 1}</div>
