@@ -31,3 +31,25 @@ export function Field({ label, children }: { label: string; children: React.Reac
 export const inputClass = "rounded-lg border border-line bg-white px-3 py-2.5 font-normal";
 
 export function Input(props: ComponentProps<"input">) { return <input className={inputClass} {...props} />; }
+
+// TEMPORARY company details copied from lloydcleaningservices.nl. Replace with Amsta Clean's own before launch.
+export const company = {
+  legalName: "Amsta Clean",
+  address: "W. Dreesweg 145, Almere, the Netherlands",
+  email: "enquiries@lloydcleaningservices.nl",
+  phone: "",
+  kvk: "",
+  vat: "",
+};
+
+export function Page({ title, draft, children }: { title: string; draft?: boolean; children: React.ReactNode }) {
+  return (
+    <main className="py-14"><Container>
+      <article className="max-w-3xl space-y-4 leading-relaxed [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-bold [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-5">
+        <h1 className="text-4xl font-bold">{title}</h1>
+        {draft && <Note>Draft text for review. It must be checked by a Dutch lawyer before launch.</Note>}
+        {children}
+      </article>
+    </Container></main>
+  );
+}

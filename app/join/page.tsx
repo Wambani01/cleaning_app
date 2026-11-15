@@ -1,10 +1,10 @@
 import { Card, Container, Field, Input, Note, hourlyRate, price } from "@/components/ui";
-export const metadata = { title: "Become a member" };
+export const metadata = { title: "I need regular cleaning" };
 
 export default function Join() {
   return (
     <main className="py-14"><Container>
-      <h1 className="mb-6 text-3xl font-bold">Cleaning membership</h1>
+      <h1 className="mb-6 text-3xl font-bold">I need regular cleaning</h1>
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <div className="text-4xl font-extrabold text-primary-dark">{price}<span className="text-base font-normal text-muted"> / month</span></div>

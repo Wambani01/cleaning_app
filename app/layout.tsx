@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Image src="/logo.svg" alt="" width={40} height={40} priority />{brandName}
               </Link>
               <nav className="flex gap-4 whitespace-nowrap text-sm font-medium sm:gap-5 sm:text-base">
-                <Link href="/join">Join</Link>
+                <Link href="/join"><span className="sm:hidden">Regular cleaning</span><span className="hidden sm:inline">I need regular cleaning</span></Link>
                 <Link href="/apply">Work with us</Link>
               </nav>
             </div>
@@ -29,9 +29,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <footer className="mt-6 border-t border-line py-8 text-sm text-muted">
           <Container>
-            <div className="mb-4 grid gap-6 sm:grid-cols-3">
+            <div className="mb-4 grid gap-6 sm:grid-cols-4">
               <div><p className="font-semibold text-ink">{brandName}</p><p>Regular cleaners in Amsterdam.</p></div>
-              <div><p className="font-semibold text-ink">Customers</p><Link href="/join" className="block">Become a member</Link><Link href="/#faq" className="block">FAQ</Link></div>
+              <div><p className="font-semibold text-ink">Customers</p><Link href="/join" className="block">I need regular cleaning</Link><Link href="/#faq" className="block">FAQ</Link></div>
+              <div><p className="font-semibold text-ink">Company</p><Link href="/about" className="block">About</Link><Link href="/contact" className="block">Contact</Link><Link href="/privacy" className="block">Privacy policy</Link><Link href="/terms" className="block">Terms and cancellation</Link></div>
               <div><p className="font-semibold text-ink">Cleaners</p><Link href="/apply" className="block">Work with us</Link></div>
             </div>
             © {new Date().getFullYear()} {brandName}, Amsterdam. <Link href="/admin" className="underline">Admin</Link>

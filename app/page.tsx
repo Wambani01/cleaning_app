@@ -42,7 +42,7 @@ export default function Home() {
           <h1 className="mb-4 text-4xl font-bold leading-tight text-white sm:text-5xl">{tagline}</h1>
           <p className="mb-8 max-w-xl text-lg text-white">Join for {price} a month, then pay just {hourlyRate} per hour for trusted cleaners across Amsterdam.</p>
           <div className="flex flex-wrap gap-3">
-            <Button href="/join">Become a member</Button>
+            <Button href="/join">I need regular cleaning</Button>
             <Button href="/apply" variant="light">I'm a cleaner</Button>
           </div>
         </Container>
@@ -77,7 +77,7 @@ export default function Home() {
             <p className="mt-2 font-semibold">Cleaning</p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-muted"><li>Pay only for the hours you book</li><li>No hidden fees</li></ul></Card>
         </div>
-        <div className="mt-6"><Button href="/join">Become a member</Button></div>
+        <div className="mt-6"><Button href="/join">I need regular cleaning</Button></div>
       </Container></section>
 
       <section className="py-14"><Container>
