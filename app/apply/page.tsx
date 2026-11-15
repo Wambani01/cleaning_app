@@ -8,7 +8,7 @@ const areas = ["Amsterdam Centrum", "Noord", "Oost", "Zuid", "West", "Nieuw-West
 const benefits: { t: string; d: string; icon: LucideIcon }[] = [
   { t: "Regular work", icon: Repeat, d: "Steady, repeat customers instead of chasing one-off jobs." },
   { t: "Work near home", icon: MapPin, d: "We match you with households in your own area, so you spend less time travelling." },
-  { t: "Your availability", icon: CalendarClock, d: "Tell us which days and hours suit you, and we match around them." },
+  { t: "Be your own boss", icon: CalendarClock, d: "You work as an independent freelancer. You decide which days and hours you work and which jobs you accept." },
   { t: "We find the customers", icon: HeartHandshake, d: "We do the marketing, matching and invoicing, so you can focus on cleaning." },
   { t: "Backup and insurance", icon: ShieldCheck, d: "Customers are covered for accidental breakage, so one mistake does not become your problem alone." },
   { t: "Support from a real team", icon: Headset, d: "Questions, a difficult visit or a customer issue? You can reach us." },
@@ -25,7 +25,8 @@ const process: { t: string; d: string; icon: LucideIcon }[] = [
 
 const needs = [
   "Aged 18 or older",
-  "Right to live and work in the Netherlands",
+  "Registered, or willing to register, as self-employed with the Dutch Chamber of Commerce (KvK)",
+  "Right to live in the Netherlands and to work as a self-employed person",
   "Some cleaning experience, or a real willingness to learn",
   "Reliable, on time and respectful in customers' homes",
   "A phone with internet, for messages and your schedule",
@@ -34,14 +35,16 @@ const needs = [
 
 const documents = [
   "A valid passport, ID card or residence permit",
+  "Your KvK registration number and VAT number (BTW-id)",
   "Your citizen service number (BSN)",
   "Bank details (IBAN) for payment",
-  "Proof of registration if you work as a self-employed person",
+  "Proof of liability insurance, if you have it",
   "A certificate of conduct (VOG) if we ask for one",
 ];
 
 const faqs = [
-  { q: "How much will I earn?", a: "We explain pay, how and when you are paid, and how you work with us during the interview, so you can decide with all the facts." },
+  { q: "Am I an employee of Amsta Clean?", a: "No. You work as an independent freelancer (zzp). You run your own business, can work for other clients too, and invoice for your work. We explain how this works in the interview." },
+  { q: "How much will I earn?", a: "We explain the rates, how and when you are paid, and how invoicing works in the interview, so you can decide with all the facts. As a freelancer you are responsible for your own tax and insurance." },
   { q: "Do I need my own cleaning supplies?", a: "We will tell you what is provided for each customer and what to bring." },
   { q: "Can I choose my days and hours?", a: "Yes. You tell us when you are available and we only offer jobs that fit." },
   { q: "What if I cannot make a visit?", a: "Tell us as early as possible. We arrange the customer's backup cleaner so the visit is covered." },
@@ -84,7 +87,7 @@ export default function Apply() {
           <Card icon={BadgeCheck} hover={false}><h2 className="mb-3 text-2xl font-bold">What we look for</h2><ul className="list-disc space-y-2 pl-5">{needs.map(n => <li key={n}>{n}</li>)}</ul></Card>
           <Card icon={FileCheck} hover={false}><h2 className="mb-3 text-2xl font-bold">Documents you will need</h2>
             <ul className="list-disc space-y-2 pl-5">{documents.map(n => <li key={n}>{n}</li>)}</ul>
-            <p className="mt-3 text-sm text-muted">The exact list depends on how you work with us. We confirm it in the interview.</p></Card>
+            <p className="mt-3 text-sm text-muted">We confirm the exact list in the interview.</p></Card>
         </div>
       </Container></section>
 

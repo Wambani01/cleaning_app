@@ -20,7 +20,7 @@ const steps: { t: string; d: string; icon: LucideIcon }[] = [
 ];
 
 const cleanerPoints = [
-  "Choose your own area and availability",
+  "Work as an independent freelancer and choose your own area and availability",
   "Regular work close to home in Amsterdam",
   "Clear process: apply, video interview, document check, start",
   "Support from our team when you need it",
