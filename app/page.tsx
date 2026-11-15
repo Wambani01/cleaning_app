@@ -33,7 +33,7 @@ const faqs = [
   { q: "Can I cancel?", a: "Yes. You can cancel your membership online. The cancellation terms will be shown clearly before you sign up." },
   { q: "How are cleaners checked?", a: "Cleaners apply, have a video interview with us and submit their identity documents before they are approved." },
   { q: "Which areas do you cover?", a: "Amsterdam. Tell us your postcode when you join and we will confirm." },
-  { q: "I want to work as a cleaner. How do I start?", a: "Use the "Work as a cleaner" page. We will invite you to a video interview and ask for your documents securely." },
+  { q: "I want to work as a cleaner. How do I start?", a: "Use the Work as a cleaner page. We will invite you to a video interview and ask for your documents securely." },
 ];
 
 export default function Home() {
