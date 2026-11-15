@@ -1,6 +1,7 @@
 import { BadgeCheck, CalendarClock, ClipboardList, FileCheck, HeartHandshake, Headset, IdCard, MapPin, Repeat, Rocket, Send, ShieldCheck, Video } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { Card, Container, Field, Input, Note, inputClass } from "@/components/ui";
+import { Card, Container } from "@/components/ui";
+import { ApplicationForm } from "@/components/forms";
 export const metadata = { title: "Work as a cleaner" };
 
 const areas = ["Amsterdam Centrum", "Noord", "Oost", "Zuid", "West", "Nieuw-West", "Zuidoost"];
@@ -103,16 +104,7 @@ export default function Apply() {
       <section id="apply-form" className="py-14"><Container>
         <h2 className="mb-2 text-3xl font-bold">Apply now</h2>
         <p className="mb-6 max-w-2xl text-muted">Tell us a little about yourself. We will contact you to arrange a video interview.</p>
-        <form className="grid max-w-lg gap-4" aria-label="Cleaner application">
-          <Field label="Full name"><Input name="name" required /></Field>
-          <Field label="Email"><Input type="email" name="email" required /></Field>
-          <Field label="Phone"><Input name="phone" required /></Field>
-          <Field label="Area"><select name="area" className={inputClass}>{areas.map(a => <option key={a}>{a}</option>)}</select></Field>
-          <Field label="Days and hours you can work"><textarea name="availability" rows={3} className={inputClass} /></Field>
-          <Field label="Experience"><textarea name="exp" rows={4} className={inputClass} /></Field>
-          <Note>Never send ID documents by email. We will give you a secure upload link after the interview.</Note>
-          <button disabled className="rounded-lg bg-primary px-6 py-3 font-bold text-ink opacity-60">Submit (coming soon)</button>
-        </form>
+        <ApplicationForm />
       </Container></section>
     </main>
   );

@@ -1,4 +1,5 @@
-import { Card, Container, Field, Input, Note, hourlyRate, price } from "@/components/ui";
+import { Card, Container, Note, hourlyRate, price } from "@/components/ui";
+import { WaitlistForm } from "@/components/forms";
 export const metadata = { title: "I need regular cleaning" };
 
 export default function Join() {
@@ -10,14 +11,9 @@ export default function Join() {
           <div className="text-4xl font-extrabold text-primary-dark">{price}<span className="text-base font-normal text-muted"> / month</span></div>
           <div className="mt-1 text-lg font-semibold">+ {hourlyRate} per hour of cleaning</div>
           <ul className="my-4 list-disc space-y-1 pl-5"><li>Regular cleaner at {hourlyRate} per hour</li><li>Backup cleaner if yours is unavailable</li><li>Breakage insurance</li></ul>
-          <Note>Online sign-up and payment (Stripe, incl. iDEAL) is coming soon. Leave your details and we will contact you.</Note>
+          <Note>Online payment is coming soon. Leave your details and we will contact you as soon as we have a regular cleaner for you.</Note>
         </Card>
-        <form className="grid max-w-md content-start gap-4" aria-label="Waitlist">
-          <Field label="Name"><Input name="name" required /></Field>
-          <Field label="Email"><Input type="email" name="email" required /></Field>
-          <Field label="Postcode"><Input name="postcode" placeholder="1011 AB" /></Field>
-          <button disabled className="rounded-lg bg-primary px-6 py-3 font-bold text-ink opacity-60">Join waitlist (coming soon)</button>
-        </form>
+        <WaitlistForm />
       </div>
     </Container></main>
   );
