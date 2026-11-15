@@ -15,13 +15,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <header className="border-b border-line bg-white">
           <Container>
-            <div className="flex h-16 items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-x-4 py-2 sm:h-16 sm:py-0">
               <Link href="/" className="flex items-center gap-3 whitespace-nowrap font-heading text-xl font-bold text-primary-dark">
                 <Image src="/logo.svg" alt="" width={40} height={40} priority />{brandName}
               </Link>
-              <nav className="flex gap-4 whitespace-nowrap text-sm font-medium sm:gap-5 sm:text-base">
-                <Link href="/join"><span className="sm:hidden">Regular cleaning</span><span className="hidden sm:inline">I need regular cleaning</span></Link>
+              <nav className="flex w-full justify-between gap-3 whitespace-nowrap sm:w-auto text-sm font-medium sm:justify-end sm:gap-5 sm:text-base">
+                <Link href="/join"><span className="sm:hidden">Cleaning</span><span className="hidden sm:inline">I need regular cleaning</span></Link>
                 <Link href="/apply">Work with us</Link>
+                <Link href="/contact">Contact</Link>
               </nav>
             </div>
           </Container>

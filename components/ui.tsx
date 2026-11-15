@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ComponentProps } from "react";
+import type { LucideIcon } from "lucide-react";
 
 export const brandName = "Amsta Clean";
 export const tagline = "Affordable regular cleaners in Amsterdam, with a backup and breakage cover."
@@ -16,8 +17,21 @@ export function Button({ href, variant = "accent", children }: { href: string; v
   return <Link href={href} className={`inline-block rounded-lg px-6 py-3 font-bold ${styles}`}>{children}</Link>;
 }
 
-export function Card({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-2xl border border-line bg-white p-6">{children}</div>;
+export function IconBadge({ icon: Icon }: { icon: LucideIcon }) {
+  return (
+    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary-dark">
+      <Icon size={26} strokeWidth={1.8} aria-hidden="true" />
+    </div>
+  );
+}
+
+export function Card({ children, icon, hover = true }: { children: React.ReactNode; icon?: LucideIcon; hover?: boolean }) {
+  return (
+    <div className={`rounded-2xl border border-line bg-white p-6 ${hover ? "transition hover:-translate-y-0.5 hover:border-primary hover:shadow-lg" : ""}`}>
+      {icon && <IconBadge icon={icon} />}
+      {children}
+    </div>
+  );
 }
 
 export function Note({ children }: { children: React.ReactNode }) {

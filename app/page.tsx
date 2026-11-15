@@ -1,20 +1,22 @@
+import { BadgeEuro, CalendarCheck, FileText, Headset, LifeBuoy, PhoneCall, Repeat, ShieldCheck, Sparkles, UserCheck, Users, Wallet } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { Button, Card, Container, hourlyRate, price, slogan, tagline } from "@/components/ui";
 
-const features = [
-  { t: "Affordable regular cleaners", d: `The same vetted cleaner every visit, from ${hourlyRate} per hour.` },
-  { t: "Backup cleaner included", d: "If your cleaner is unavailable, we send a backup so you are never left without." },
-  { t: "Breakage insurance", d: "Accidents happen. Cover for breakage is part of your membership." },
-  { t: "Vetted cleaners", d: "Every cleaner has a video interview and a document check before they start." },
-  { t: "One simple account", d: "Book, reschedule and see your visits and invoices in the app or on the web." },
-  { t: "Help if something goes wrong", d: "Questions or complaints? We handle them and re-match you if it is not a fit." },
+const features: { t: string; d: string; icon: LucideIcon }[] = [
+  { t: "Affordable regular cleaners", icon: Wallet, d: `The same vetted cleaner every visit, from ${hourlyRate} per hour.` },
+  { t: "Backup cleaner included", icon: Repeat, d: "If your cleaner is unavailable, we send a backup so you are never left without." },
+  { t: "Breakage insurance", icon: ShieldCheck, d: "Accidents happen. Cover for breakage is part of your membership." },
+  { t: "Vetted cleaners", icon: UserCheck, d: "Every cleaner has a video interview and a document check before they start." },
+  { t: "One simple account", icon: CalendarCheck, d: "Book, reschedule and see your visits and invoices in the app or on the web." },
+  { t: "Help if something goes wrong", icon: LifeBuoy, d: "Questions or complaints? We handle them and re-match you if it is not a fit." },
 ];
 
-const steps = [
-  { t: "Join", d: `Sign up for the ${price} per month membership.` },
-  { t: "Tell us what you need", d: "Your address, how often, and any preferences." },
-  { t: "Meet your cleaner", d: "We match you with a regular cleaner and a backup." },
-  { t: "Orientation call", d: "We call you to go through your needs, your home and what to expect, before the first visit." },
-  { t: "Relax", d: `Pay ${hourlyRate} per hour for each visit. Cancel the membership any time.` },
+const steps: { t: string; d: string; icon: LucideIcon }[] = [
+  { t: "Join", icon: FileText, d: `Sign up for the ${price} per month membership.` },
+  { t: "Tell us what you need", icon: Headset, d: "Your address, how often, and any preferences." },
+  { t: "Meet your cleaner", icon: Users, d: "We match you with a regular cleaner and a backup." },
+  { t: "Orientation call", icon: PhoneCall, d: "We call you to go through your needs, your home and what to expect, before the first visit." },
+  { t: "Relax", icon: Sparkles, d: `Pay ${hourlyRate} per hour for each visit. Cancel the membership any time.` },
 ];
 
 const cleanerPoints = [
@@ -52,7 +54,7 @@ export default function Home() {
       <section className="py-14"><Container>
         <h2 className="mb-6 text-3xl font-bold">Why Amsta Clean</h2>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map(f => <Card key={f.t}><h3 className="mb-2 text-lg font-bold">{f.t}</h3><p className="text-muted">{f.d}</p></Card>)}
+          {features.map(f => <Card key={f.t} icon={f.icon}><h3 className="mb-2 text-lg font-bold">{f.t}</h3><p className="text-muted">{f.d}</p></Card>)}
         </div>
       </Container></section>
 
@@ -60,8 +62,8 @@ export default function Home() {
         <h2 className="mb-6 text-3xl font-bold">How it works</h2>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {steps.map((s, i) => (
-            <Card key={s.t}>
-              <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-primary font-bold">{i + 1}</div>
+            <Card key={s.t} icon={s.icon}>
+              <p className="mb-1 text-xs font-bold uppercase tracking-wide text-primary-dark">Step {i + 1}</p>
               <h3 className="mb-1 font-bold">{s.t}</h3><p className="text-sm text-muted">{s.d}</p>
             </Card>
           ))}
@@ -71,10 +73,10 @@ export default function Home() {
       <section className="bg-white py-14"><Container>
         <h2 className="mb-6 text-3xl font-bold">Simple pricing</h2>
         <div className="grid gap-5 md:grid-cols-2">
-          <Card><div className="text-4xl font-bold text-primary-dark">{price}<span className="text-base font-normal text-muted"> / month</span></div>
+          <Card icon={Wallet} hover={false}><div className="text-4xl font-bold text-primary-dark">{price}<span className="text-base font-normal text-muted"> / month</span></div>
             <p className="mt-2 font-semibold">Membership</p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-muted"><li>Access to vetted regular cleaners</li><li>Backup cleaner</li><li>Breakage insurance</li></ul></Card>
-          <Card><div className="text-4xl font-bold text-primary-dark">{hourlyRate}<span className="text-base font-normal text-muted"> / hour</span></div>
+          <Card icon={BadgeEuro} hover={false}><div className="text-4xl font-bold text-primary-dark">{hourlyRate}<span className="text-base font-normal text-muted"> / hour</span></div>
             <p className="mt-2 font-semibold">Cleaning</p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-muted"><li>Pay only for the hours you book</li><li>No hidden fees</li></ul></Card>
         </div>
