@@ -16,11 +16,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="border-b border-line bg-white">
           <Container>
             <div className="flex h-16 items-center justify-between">
-              <Link href="/" className="flex items-center gap-3 font-heading text-xl font-bold text-primary-dark">
-                <Image src="/logo.png" alt="" width={46} height={50} priority />{brandName}
+              <Link href="/" className="flex items-center gap-3 whitespace-nowrap font-heading text-xl font-bold text-primary-dark">
+                <Image src="/logo.svg" alt="" width={40} height={40} priority />{brandName}
               </Link>
-              <nav className="flex gap-5 font-medium">
-                <Link href="/join">Become a member</Link>
+              <nav className="flex gap-4 whitespace-nowrap text-sm font-medium sm:gap-5 sm:text-base">
+                <Link href="/join">Join</Link>
                 <Link href="/apply">Work with us</Link>
               </nav>
             </div>

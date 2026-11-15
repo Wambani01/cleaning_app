@@ -1,4 +1,4 @@
-# Cleaning app
+# Amsta Clean
 
 Membership cleaning service for Amsterdam: customers pay a monthly membership for regular cleaners, a backup cleaner and breakage insurance; cleaners apply and are vetted.
 

@@ -3,9 +3,9 @@
 @import "@fontsource/cardo/400.css";
 @import "@fontsource/cardo/700.css";
 
-/* Brand tokens taken from lloydcleaningservices.nl. Single source of truth. */
+/* Brand tokens (teal palette). Single source of truth. */
 @theme {
-  --color-primary: #10b1c7;       /* buttons / highlights on the Lloyd site */
+  --color-primary: #10b1c7;      
   --color-primary-dark: #0a8a9b;  /* logo's darker teal; use for text and links */
   --color-primary-deep: #076170;  /* hero gradient end */
   --color-mint: #71ebe3;
