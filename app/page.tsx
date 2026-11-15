@@ -1,7 +1,7 @@
-import { Button, Card, Container, price, slogan, tagline } from "@/components/ui";
+import { Button, Card, Container, hourlyRate, price, slogan, tagline } from "@/components/ui";
 
 const features = [
-  { t: "Affordable regular cleaners", d: "The same vetted cleaner every visit, at a fair hourly rate." },
+  { t: "Affordable regular cleaners", d: `The same vetted cleaner every visit, from ${hourlyRate} per hour.` },
   { t: "Backup cleaner included", d: "If your cleaner is unavailable, we send a backup so you are never left without." },
   { t: "Breakage insurance", d: "Accidents happen. Cover for breakage is part of your membership." },
 ];
@@ -13,7 +13,7 @@ export default function Home() {
         <Container>
           <p className="mb-3 font-heading text-xl italic text-mint">{slogan}</p>
           <h1 className="mb-4 text-4xl font-bold leading-tight text-white sm:text-5xl">{tagline}</h1>
-          <p className="mb-8 max-w-xl text-lg text-white">Join for {price} a month and get access to trusted cleaners across Amsterdam.</p>
+          <p className="mb-8 max-w-xl text-lg text-white">Join for {price} a month, then pay just {hourlyRate} per hour for trusted cleaners across Amsterdam.</p>
           <div className="flex flex-wrap gap-3">
             <Button href="/join">Become a member</Button>
             <Button href="/apply" variant="light">I'm a cleaner</Button>
@@ -30,7 +30,7 @@ export default function Home() {
         <h2 className="mb-6 text-3xl font-bold">How it works</h2>
         <ol className="list-decimal space-y-2 pl-5">
           <li>Join the cleaning membership.</li><li>Tell us your address and how often you need cleaning.</li>
-          <li>We match you with a regular cleaner and a backup.</li><li>Pay the hourly rate for each visit.</li>
+          <li>We match you with a regular cleaner and a backup.</li><li>Pay {hourlyRate} per hour for each visit.</li>
         </ol>
       </Container></section>
     </main>

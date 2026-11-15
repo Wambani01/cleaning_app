@@ -5,6 +5,7 @@ export const brandName = "Amsta Clean";
 export const tagline = "Affordable regular cleaners in Amsterdam, with a backup and breakage cover."
 export const slogan = "A spotless home, without the stress.";
 export const price = "€15";
+export const hourlyRate = "€15";
 
 export function Container({ children }: { children: React.ReactNode }) {
   return <div className="mx-auto max-w-5xl px-5">{children}</div>;

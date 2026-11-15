@@ -1,4 +1,4 @@
-import { Card, Container, Field, Input, Note, price } from "@/components/ui";
+import { Card, Container, Field, Input, Note, hourlyRate, price } from "@/components/ui";
 export const metadata = { title: "Become a member" };
 
 export default function Join() {
@@ -8,7 +8,8 @@ export default function Join() {
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <div className="text-4xl font-extrabold text-primary-dark">{price}<span className="text-base font-normal text-muted"> / month</span></div>
-          <ul className="my-4 list-disc space-y-1 pl-5"><li>Regular cleaner at an hourly rate</li><li>Backup cleaner if yours is unavailable</li><li>Breakage insurance</li></ul>
+          <div className="mt-1 text-lg font-semibold">+ {hourlyRate} per hour of cleaning</div>
+          <ul className="my-4 list-disc space-y-1 pl-5"><li>Regular cleaner at {hourlyRate} per hour</li><li>Backup cleaner if yours is unavailable</li><li>Breakage insurance</li></ul>
           <Note>Online sign-up and payment (Stripe, incl. iDEAL) is coming soon. Leave your details and we will contact you.</Note>
         </Card>
         <form className="grid max-w-md content-start gap-4" aria-label="Waitlist">
