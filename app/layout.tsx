@@ -28,7 +28,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         {children}
         <footer className="mt-6 border-t border-line py-8 text-sm text-muted">
-          <Container>© {new Date().getFullYear()} {brandName}, Amsterdam. <Link href="/admin" className="underline">Admin</Link></Container>
+          <Container>
+            <div className="mb-4 grid gap-6 sm:grid-cols-3">
+              <div><p className="font-semibold text-ink">{brandName}</p><p>Regular cleaners in Amsterdam.</p></div>
+              <div><p className="font-semibold text-ink">Customers</p><Link href="/join" className="block">Become a member</Link><Link href="/#faq" className="block">FAQ</Link></div>
+              <div><p className="font-semibold text-ink">Cleaners</p><Link href="/apply" className="block">Work with us</Link></div>
+            </div>
+            © {new Date().getFullYear()} {brandName}, Amsterdam. <Link href="/admin" className="underline">Admin</Link>
+          </Container>
         </footer>
       </body>
     </html>
