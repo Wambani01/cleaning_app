@@ -23,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link href="/join"><span className="sm:hidden">Cleaning</span><span className="hidden sm:inline">I need regular cleaning</span></Link>
                 <Link href="/apply">Work as a cleaner</Link>
                 <Link href="/contact">Contact</Link>
+                <Link href="/sign-in" className="hidden font-semibold text-primary-dark sm:inline">Sign in</Link>
               </nav>
             </div>
           </Container>
@@ -33,10 +34,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="mb-4 grid gap-6 sm:grid-cols-4">
               <div><p className="font-semibold text-ink">{brandName}</p><p>Regular cleaners in Amsterdam.</p></div>
               <div><p className="font-semibold text-ink">Customers</p><Link href="/join" className="block">I need regular cleaning</Link><Link href="/#faq" className="block">FAQ</Link></div>
-              <div><p className="font-semibold text-ink">Company</p><Link href="/about" className="block">About</Link><Link href="/contact" className="block">Contact</Link><Link href="/privacy" className="block">Privacy policy</Link><Link href="/terms" className="block">Terms and cancellation</Link></div>
+              <div><p className="font-semibold text-ink">Company</p><Link href="/sign-in" className="block">Sign in</Link><Link href="/about" className="block">About</Link><Link href="/contact" className="block">Contact</Link><Link href="/privacy" className="block">Privacy policy</Link><Link href="/terms" className="block">Terms and cancellation</Link></div>
               <div><p className="font-semibold text-ink">Cleaners</p><Link href="/apply" className="block">Work as a cleaner</Link></div>
             </div>
-            © {new Date().getFullYear()} {brandName}, Amsterdam. <Link href="/admin" className="underline">Admin</Link>
+            © {new Date().getFullYear()} {brandName}, Amsterdam. 
           </Container>
         </footer>
       </body>

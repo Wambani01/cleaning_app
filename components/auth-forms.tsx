@@ -1,0 +1,86 @@
+"use client";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import { Field, Input } from "@/components/ui";
+import { portals, type Portal } from "@/lib/portals";
+
+const btn = "rounded-lg bg-primary px-6 py-3 font-bold text-ink hover:bg-mint disabled:opacity-60";
+const errCls = "rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800";
+
+function safeNext(n: string | null, fallback: string) {
+  return n && n.startsWith("/") && !n.startsWith("//") ? n : fallback;
+}
+
+export function SignInForm({ portal }: { portal: Portal }) {
+  const cfg = portals[portal];
+  const router = useRouter();
+  const next = safeNext(useSearchParams().get("next"), cfg.home);
+  const [error, setError] = useState(""); const [pending, setPending] = useState(false);
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault(); setError(""); setPending(true);
+    const f = new FormData(e.currentTarget);
+    const { data, error } = await authClient.signIn.email({ email: String(f.get("email")), password: String(f.get("password")) });
+    if (error || !data) { setPending(false); return setError("Wrong email or password."); }
+    if (data.user.role !== cfg.role) {
+      // Right password, wrong portal. Sign out again and point them to the right place.
+      await authClient.signOut(); setPending(false);
+      const own = portals[data.user.role as Portal];
+      return setError(own ? `This is a ${own.label.toLowerCase()} account. Please use the ${own.label.toLowerCase()} sign-in.` : "This account cannot use this portal.");
+    }
+    router.push(next); router.refresh();
+  }
+
+  return (
+    <form onSubmit={onSubmit} className="grid max-w-md gap-4" aria-label={`${cfg.label} sign in`}>
+      <Field label="Email"><Input type="email" name="email" required autoComplete="email" /></Field>
+      <Field label="Password"><Input type="password" name="password" required autoComplete="current-password" /></Field>
+      {error && <p role="alert" className={errCls}>{error}</p>}
+      <button disabled={pending} className={btn}>{pending ? "Signing in…" : "Sign in"}</button>
+      {cfg.signUp && <p className="text-sm text-muted">No account yet? <Link className="text-primary-dark underline" href={cfg.signUp}>Create one</Link></p>}
+    </form>
+  );
+}
+
+export function SignUpForm({ portal }: { portal: Exclude<Portal, "admin"> }) {
+  const cfg = portals[portal];
+  const router = useRouter();
+  const [error, setError] = useState(""); const [pending, setPending] = useState(false);
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault(); setError("");
+    const f = new FormData(e.currentTarget);
+    const password = String(f.get("password"));
+    if (password !== String(f.get("confirm"))) return setError("The passwords do not match.");
+    if (password.length < 10) return setError("Use a password of at least 10 characters.");
+    setPending(true);
+    const { error } = await authClient.signUp.email({ name: String(f.get("name")).trim(), email: String(f.get("email")), password, role: cfg.role });
+    setPending(false);
+    if (error) return setError(error.message || "Could not create your account. Try a different email.");
+    router.push(cfg.home); router.refresh();
+  }
+
+  return (
+    <form onSubmit={onSubmit} className="grid max-w-md gap-4" aria-label={`${cfg.label} sign up`}>
+      <Field label="Full name"><Input name="name" required autoComplete="name" maxLength={120} /></Field>
+      <Field label="Email"><Input type="email" name="email" required autoComplete="email" /></Field>
+      <Field label="Password (at least 10 characters)"><Input type="password" name="password" required minLength={10} autoComplete="new-password" /></Field>
+      <Field label="Repeat password"><Input type="password" name="confirm" required minLength={10} autoComplete="new-password" /></Field>
+      {error && <p role="alert" className={errCls}>{error}</p>}
+      <button disabled={pending} className={btn}>{pending ? "Creating account…" : "Create account"}</button>
+      <p className="text-sm text-muted">Already have an account? <Link className="text-primary-dark underline" href={cfg.signIn}>Sign in</Link></p>
+    </form>
+  );
+}
+
+export function SignOutButton({ to = "/" }: { to?: string }) {
+  const router = useRouter();
+  return (
+    <button className="rounded-lg border border-line bg-white px-4 py-2 text-sm font-semibold hover:border-primary"
+      onClick={async () => { await authClient.signOut(); router.push(to); router.refresh(); }}>
+      Sign out
+    </button>
+  );
+}
