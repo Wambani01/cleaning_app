@@ -39,10 +39,10 @@ export function Note({ children }: { children: React.ReactNode }) {
 }
 
 export function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return <label className="grid gap-1.5 text-sm font-semibold">{label}{children}</label>;
+  return <label className="grid min-w-0 gap-1.5 text-sm font-semibold">{label}{children}</label>;
 }
 
-export const inputClass = "rounded-lg border border-line bg-white px-3 py-2.5 font-normal";
+export const inputClass = "w-full min-w-0 rounded-lg border border-line bg-white px-3 py-2.5 font-normal";
 
 export function Input(props: ComponentProps<"input">) { return <input className={inputClass} {...props} />; }
 

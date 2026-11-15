@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { registerCustomerInterest, validateCustomerDetails, type CustomerDetails } from "@/app/actions";
 import { Field, Input } from "@/components/ui";
 import { portals, type Portal } from "@/lib/portals";
 
@@ -44,7 +45,7 @@ export function SignInForm({ portal }: { portal: Portal }) {
   );
 }
 
-export function SignUpForm({ portal }: { portal: Exclude<Portal, "admin"> }) {
+export function SignUpForm({ portal, withAddress = false }: { portal: Exclude<Portal, "admin">; withAddress?: boolean }) {
   const cfg = portals[portal];
   const router = useRouter();
   const [error, setError] = useState(""); const [pending, setPending] = useState(false);
@@ -55,10 +56,19 @@ export function SignUpForm({ portal }: { portal: Exclude<Portal, "admin"> }) {
     const password = String(f.get("password"));
     if (password !== String(f.get("confirm"))) return setError("The passwords do not match.");
     if (password.length < 10) return setError("Use a password of at least 10 characters.");
+    const g = (k: string) => String(f.get(k) ?? "");
+    const details: CustomerDetails = { phone: g("phone"), street: g("street"), houseNumber: g("houseNumber"), houseNumberAddition: g("houseNumberAddition"), postcode: g("postcode"), city: g("city") };
     setPending(true);
+    if (withAddress) {
+      // Check the address before creating the account, so a typo does not leave an account without an address.
+      const problem = await validateCustomerDetails(details);
+      if (problem) { setPending(false); return setError(problem); }
+    }
     const { error } = await authClient.signUp.email({ name: String(f.get("name")).trim(), email: String(f.get("email")), password, role: cfg.role });
     setPending(false);
     if (error) return setError(error.message || "Could not create your account. Try a different email.");
+    // The account exists and the browser is now signed in. For customers, join the waiting list for a cleaner.
+    if (withAddress && cfg.role === "customer") { try { await registerCustomerInterest(details); } catch { /* the account is created either way */ } }
     router.push(cfg.home); router.refresh();
   }
 
@@ -68,6 +78,25 @@ export function SignUpForm({ portal }: { portal: Exclude<Portal, "admin"> }) {
       <Field label="Email"><Input type="email" name="email" required autoComplete="email" /></Field>
       <Field label="Password (at least 10 characters)"><Input type="password" name="password" required minLength={10} autoComplete="new-password" /></Field>
       <Field label="Repeat password"><Input type="password" name="confirm" required minLength={10} autoComplete="new-password" /></Field>
+      {withAddress && (
+        <>
+          <Field label="Phone number"><Input type="tel" name="phone" required placeholder="06 12345678" pattern="[+0-9()\s\-]{8,20}" autoComplete="tel" /></Field>
+          <p className="-mb-1 text-sm font-semibold">Address where you need cleaning</p>
+          <div className="grid grid-cols-[minmax(0,1fr)_5rem_5rem] gap-3">
+            <Field label="Street"><Input name="street" required maxLength={120} autoComplete="address-line1" /></Field>
+            <Field label="No."><Input name="houseNumber" required inputMode="numeric" pattern="[0-9]{1,5}" maxLength={5} /></Field>
+            <Field label="Add."><Input name="houseNumberAddition" maxLength={10} placeholder="A, 2" /></Field>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Postcode"><Input name="postcode" required placeholder="1011 AB" pattern="[1-9][0-9]{3}\s?[A-Za-z]{2}" maxLength={7} autoComplete="postal-code" /></Field>
+            <Field label="City"><Input name="city" required defaultValue="Amsterdam" maxLength={80} autoComplete="address-level2" /></Field>
+          </div>
+        </>
+      )}
+      <label className="flex items-start gap-2 text-sm font-normal">
+        <input type="checkbox" name="consent" required className="mt-1" />
+        <span>I agree to the <Link href="/privacy" className="text-primary-dark underline">privacy policy</Link>.</span>
+      </label>
       {error && <p role="alert" className={errCls}>{error}</p>}
       <button disabled={pending} className={btn}>{pending ? "Creating account…" : "Create account"}</button>
       <p className="text-sm text-muted">Already have an account? <Link className="text-primary-dark underline" href={cfg.signIn}>Sign in</Link></p>

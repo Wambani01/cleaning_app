@@ -15,7 +15,7 @@ type Application = {
   id: string; created_at: Date; full_name: string; email: string; phone: string; area: string;
   availability: string | null; experience: string | null; status: string; notes: string | null;
 };
-type Waiter = { id: string; created_at: Date; name: string; email: string; postcode: string | null };
+type Waiter = { id: string; created_at: Date; name: string; email: string; phone: string | null; street: string | null; house_number: string | null; house_number_addition: string | null; postcode: string | null; city: string | null };
 
 const label = (s: string) => s.replace(/_/g, " ").replace(/^./, c => c.toUpperCase());
 const fmt = (d: Date) => new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Amsterdam" }).format(d);
@@ -36,7 +36,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
           : { text: "select * from public.cleaner_applications order by created_at desc limit 200" })).rows
     : [];
   const waiters: Waiter[] = tab === "waitlist"
-    ? (await pool.query("select id, created_at, name, email, postcode from public.customer_waitlist order by created_at desc limit 500")).rows
+    ? (await pool.query("select id, created_at, name, email, phone, street, house_number, house_number_addition, postcode, city from public.customer_waitlist order by created_at desc limit 500")).rows
     : [];
 
   const tabCls = (on: boolean) => `rounded-full px-4 py-2 text-sm font-semibold ${on ? "bg-primary-deep text-white" : "bg-white border border-line hover:border-primary"}`;
@@ -96,12 +96,13 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
       {tab === "waitlist" && (
         <div className="overflow-x-auto rounded-2xl border border-line bg-white">
           <table className="w-full text-left text-sm">
-            <thead className="bg-surface text-muted"><tr><th className="p-3">Date</th><th className="p-3">Name</th><th className="p-3">Email</th><th className="p-3">Postcode</th></tr></thead>
+            <thead className="bg-surface text-muted"><tr><th className="p-3">Date</th><th className="p-3">Name</th><th className="p-3">Email</th><th className="p-3">Phone</th><th className="p-3">Address</th></tr></thead>
             <tbody>
-              {waiters.length === 0 && <tr><td className="p-3 text-muted" colSpan={4}>Nobody on the waitlist yet.</td></tr>}
+              {waiters.length === 0 && <tr><td className="p-3 text-muted" colSpan={5}>Nobody on the waitlist yet.</td></tr>}
               {waiters.map(w => (
                 <tr key={w.id} className="border-t border-line"><td className="p-3 whitespace-nowrap">{fmt(w.created_at)}</td><td className="p-3">{w.name}</td>
-                  <td className="p-3"><a className="text-primary-dark underline" href={`mailto:${w.email}`}>{w.email}</a></td><td className="p-3">{w.postcode ?? ""}</td></tr>
+                  <td className="p-3"><a className="text-primary-dark underline" href={`mailto:${w.email}`}>{w.email}</a></td><td className="p-3 whitespace-nowrap">{w.phone ? <a className="text-primary-dark underline" href={`tel:${w.phone}`}>{w.phone}</a> : ""}</td>
+                  <td className="p-3">{[w.street && `${w.street} ${w.house_number ?? ""}${w.house_number_addition ? " " + w.house_number_addition : ""}`.trim(), [w.postcode, w.city].filter(Boolean).join(" ")].filter(Boolean).join(", ")}</td></tr>
               ))}
             </tbody>
           </table>

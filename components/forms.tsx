@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { Field, Input, inputClass } from "@/components/ui";
-import { joinWaitlist, submitApplication, type FormState } from "@/app/actions";
+import { submitApplication, type FormState } from "@/app/actions";
 
 const initial: FormState = { ok: false, message: "" };
 const areas = ["Amsterdam Centrum", "Noord", "Oost", "Zuid", "West", "Nieuw-West", "Zuidoost"];
@@ -42,22 +42,6 @@ export function ApplicationForm() {
       <Consent />
       <Status state={state} />
       <Submit pending={pending}>Submit application</Submit>
-    </form>
-  );
-}
-
-export function WaitlistForm() {
-  const [state, action, pending] = useActionState(joinWaitlist, initial);
-  if (state.ok) return <Status state={state} />;
-  return (
-    <form action={action} className="grid max-w-md content-start gap-4" aria-label="Waitlist">
-      <Honeypot />
-      <Field label="Name"><Input name="name" required maxLength={120} /></Field>
-      <Field label="Email"><Input type="email" name="email" required maxLength={200} /></Field>
-      <Field label="Postcode"><Input name="postcode" placeholder="1011 AB" maxLength={12} /></Field>
-      <Consent />
-      <Status state={state} />
-      <Submit pending={pending}>I need regular cleaning</Submit>
     </form>
   );
 }
