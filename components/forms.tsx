@@ -34,8 +34,18 @@ export function ApplicationForm() {
       <Honeypot />
       <Field label="Full name"><Input name="name" required maxLength={120} /></Field>
       <Field label="Email"><Input type="email" name="email" required maxLength={200} /></Field>
-      <Field label="Phone"><Input name="phone" required maxLength={40} /></Field>
-      <Field label="Area"><select name="area" className={inputClass}>{areas.map(a => <option key={a}>{a}</option>)}</select></Field>
+      <Field label="Phone number"><Input type="tel" name="phone" required placeholder="06 12345678" pattern="[+0-9()\s\-]{8,20}" autoComplete="tel" /></Field>
+      <p className="-mb-1 text-sm font-semibold">Your home address</p>
+      <div className="grid grid-cols-[minmax(0,1fr)_5rem_5rem] gap-3">
+        <Field label="Street"><Input name="street" required maxLength={120} autoComplete="address-line1" /></Field>
+        <Field label="No."><Input name="houseNumber" required inputMode="numeric" pattern="[0-9]{1,5}" maxLength={5} /></Field>
+        <Field label="Add."><Input name="houseNumberAddition" maxLength={10} placeholder="A, 2" /></Field>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="Postcode"><Input name="postcode" required placeholder="1011 AB" pattern="[1-9][0-9]{3}\s?[A-Za-z]{2}" maxLength={7} autoComplete="postal-code" /></Field>
+        <Field label="City"><Input name="city" required defaultValue="Amsterdam" maxLength={80} autoComplete="address-level2" /></Field>
+      </div>
+      <Field label="Area where you want to work"><select name="area" className={inputClass}>{areas.map(a => <option key={a}>{a}</option>)}</select></Field>
       <Field label="Days and hours you can work"><textarea name="availability" rows={3} maxLength={2000} className={inputClass} /></Field>
       <Field label="Experience"><textarea name="exp" rows={4} maxLength={2000} className={inputClass} /></Field>
       <p className="rounded-lg border border-primary/40 bg-primary/10 px-4 py-3 text-sm">Never send ID documents by email. We will give you a secure upload link after the interview.</p>

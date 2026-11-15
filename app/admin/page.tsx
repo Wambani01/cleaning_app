@@ -14,6 +14,7 @@ export const dynamic = "force-dynamic";
 type Application = {
   id: string; created_at: Date; full_name: string; email: string; phone: string; area: string;
   availability: string | null; experience: string | null; status: string; notes: string | null;
+  street: string | null; house_number: string | null; house_number_addition: string | null; postcode: string | null; city: string | null;
 };
 type Waiter = { id: string; created_at: Date; name: string; email: string; phone: string | null; street: string | null; house_number: string | null; house_number_addition: string | null; postcode: string | null; city: string | null };
 
@@ -77,6 +78,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
                   <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-bold text-primary-deep">{label(a.status)}</span>
                 </div>
                 <p className="mt-2 text-sm"><a className="text-primary-dark underline" href={`mailto:${a.email}`}>{a.email}</a> · <a className="text-primary-dark underline" href={`tel:${a.phone}`}>{a.phone}</a></p>
+                {a.street && <p className="mt-2 text-sm"><b>Address:</b> {`${a.street} ${a.house_number ?? ""}${a.house_number_addition ? " " + a.house_number_addition : ""}`.trim()}, {[a.postcode, a.city].filter(Boolean).join(" ")}</p>}
                 {a.availability && <p className="mt-2 text-sm"><b>Availability:</b> {a.availability}</p>}
                 {a.experience && <p className="mt-1 text-sm"><b>Experience:</b> {a.experience}</p>}
                 <form action={updateApplication} className="mt-4 grid gap-3 sm:grid-cols-[200px_1fr_auto] sm:items-start">

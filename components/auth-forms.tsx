@@ -3,7 +3,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { registerCustomerInterest, validateCustomerDetails, type CustomerDetails } from "@/app/actions";
+import { registerCustomerInterest } from "@/app/actions";
+import { checkAddressDetails, type AddressDetails as CustomerDetails } from "@/lib/validate";
 import { Field, Input } from "@/components/ui";
 import { portals, type Portal } from "@/lib/portals";
 
@@ -61,7 +62,7 @@ export function SignUpForm({ portal, withAddress = false }: { portal: Exclude<Po
     setPending(true);
     if (withAddress) {
       // Check the address before creating the account, so a typo does not leave an account without an address.
-      const problem = await validateCustomerDetails(details);
+      const problem = checkAddressDetails(details);
       if (problem) { setPending(false); return setError(problem); }
     }
     const { error } = await authClient.signUp.email({ name: String(f.get("name")).trim(), email: String(f.get("email")), password, role: cfg.role });
