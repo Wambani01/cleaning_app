@@ -23,6 +23,15 @@ export default async function CleanerHome() {
   // An application is linked to this account by email address.
   const app = (await pool.query("select status, created_at from public.cleaner_applications where lower(email) = lower($1) order by created_at desc limit 1", [session.user.email])).rows[0] as { status: string } | undefined;
   const step = app ? steps[app.status] : undefined;
+  // Customers assigned to this cleaner. A cleaner sees the first name and address of the home, nothing more.
+  const jobs = (await pool.query(
+    `select w.name, w.street, w.house_number, w.house_number_addition, w.postcode, w.city,
+            case when a.regular_cleaner_id = c.id then 'regular' else 'backup' end as role
+       from public.cleaner_applications c
+       join public.customer_assignments a on a.regular_cleaner_id = c.id or a.backup_cleaner_id = c.id
+       join public.customer_waitlist w on w.id = a.waitlist_id
+      where lower(c.email) = lower($1) and c.status = 'approved'
+      order by w.created_at`, [session.user.email])).rows as { name: string; street: string | null; house_number: string | null; house_number_addition: string | null; postcode: string | null; city: string | null; role: string }[];
 
   return (
     <main className="py-10"><Container>
@@ -35,7 +44,15 @@ export default async function CleanerHome() {
           {step ? <><p className="font-semibold text-primary-dark">{step.title}</p><p className="mt-1 text-sm text-muted">{step.text}</p></> :
             <><p className="text-sm text-muted">We cannot find an application with this email address yet.</p><Link href="/apply" className="mt-3 inline-block text-sm font-semibold text-primary-dark underline">Apply now</Link></>}</Card>
         <Card icon={FileCheck} hover={false}><h2 className="mb-1 font-bold">Documents</h2><p className="text-sm text-muted">Secure document upload is coming soon. We will tell you when it is your turn.</p></Card>
-        <Card icon={CircleCheck} hover={false}><h2 className="mb-1 font-bold">Jobs and availability</h2><p className="text-sm text-muted">Once you are approved, your jobs and availability will appear here.</p></Card>
+        <Card icon={CircleCheck} hover={false}><h2 className="mb-1 font-bold">Your customers</h2>
+          {jobs.length === 0 ? <p className="text-sm text-muted">Once you are approved and matched, your customers will appear here.</p> : (
+            <ul className="grid gap-3 text-sm">
+              {jobs.map((j, i) => (
+                <li key={i}><p className="font-semibold">{j.name.split(" ")[0]} <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs font-bold text-primary-deep">{j.role === "regular" ? "Regular" : "Backup"}</span></p>
+                  <p className="text-muted">{[j.street && `${j.street} ${j.house_number ?? ""}${j.house_number_addition ? " " + j.house_number_addition : ""}`.trim(), [j.postcode, j.city].filter(Boolean).join(" ")].filter(Boolean).join(", ")}</p></li>
+              ))}
+            </ul>
+          )}</Card>
       </div>
     </Container></main>
   );
