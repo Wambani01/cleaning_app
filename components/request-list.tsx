@@ -41,7 +41,7 @@ export function RequestList({ requests, empty, adminId, payHref }: { requests: C
             </div>
           </div>
           {r.status === "awaiting_payment" && payHref && (
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-orange-50 px-4 py-3 text-sm"><span>This booking is confirmed once the €15 membership is paid.</span><a href={payHref} className="rounded-full bg-primary px-5 py-2 font-bold text-ink-deep hover:bg-mint">Pay €15 now</a></div>
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-orange-50 px-4 py-3 text-sm"><span>Pay €15 to get a cleaner assigned and confirm this booking.</span><a href={payHref} className="rounded-full bg-primary px-5 py-2 font-bold text-ink-deep hover:bg-mint">Pay €15 now</a></div>
           )}
           <div className="mt-2 grid gap-0.5 text-sm">
             {addressLine(r) && <p className="text-muted">{addressLine(r)}</p>}

@@ -68,6 +68,8 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         <div className="flex items-center gap-3"><span className="text-sm text-muted">{session.user.email}</span><SignOutButton to="/admin/sign-in" /></div>
       </div>
 
+      <NeedsAttention />
+
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card hover={false}><p className="text-sm text-muted">Applications</p><p className="text-3xl font-bold">{total}</p></Card>
         <Card hover={false}><p className="text-sm text-muted">New, not yet contacted</p><p className="text-3xl font-bold">{counts["new"] ?? 0}</p></Card>
@@ -191,5 +193,36 @@ async function AdminPayments() {
         </table>
       </div>
     </div>
+  );
+}
+
+/** The things an admin has to act on, each with a link to the right filtered list. */
+async function NeedsAttention() {
+  const n = (await pool.query(`select
+      (select count(*) from public.cleaning_requests where status = 'awaiting_payment' and requested_date >= current_date)::int as unpaid,
+      (select count(*) from public.cleaning_requests where cleaner_id is null and status in ('requested','awaiting_payment','confirmed') and requested_date >= current_date)::int as no_cleaner,
+      (select count(*) from public.cleaning_requests where cleaner_response = 'declined' and status in ('requested','confirmed') and requested_date >= current_date)::int as declined,
+      (select count(*) from public.cleaning_requests where cleaner_response = 'pending' and status in ('requested','confirmed') and requested_date >= current_date)::int as unanswered,
+      (select count(*) from public.customer_memberships where status = 'past_due')::int as past_due,
+      (select count(*) from public.payments where status = 'failed' and created_at > now() - interval '14 days')::int as failed,
+      (select count(*) from public.cleaner_applications where status = 'new')::int as new_apps`)).rows[0];
+  const items = [
+    { n: n.no_cleaner, text: "requests with no cleaner", action: "Assign a cleaner", href: "/admin?tab=requests&rstatus=no_cleaner" },
+    { n: n.declined, text: "requests the cleaner declined", action: "Reassign", href: "/admin?tab=requests&rstatus=cleaner_declined" },
+    { n: n.unanswered, text: "requests waiting for the cleaner to answer", action: "Call the cleaner", href: "/admin?tab=requests&rstatus=cleaner_pending" },
+    { n: n.unpaid, text: "requests waiting for the first payment", action: "See who has not paid", href: "/admin?tab=requests&rstatus=awaiting_payment" },
+    { n: n.past_due, text: "overdue memberships", action: "Open customers", href: "/admin?tab=waitlist" },
+    { n: n.failed, text: "failed payments in the last 14 days", action: "Open payments", href: "/admin?tab=payments" },
+    { n: n.new_apps, text: "new cleaner applications", action: "Review", href: "/admin?tab=applications&status=new" },
+  ].filter(i => i.n > 0);
+  return (
+    <section aria-label="Needs attention" className="mb-6 rounded-3xl border border-line bg-white p-5">
+      <h2 className="mb-3 text-lg font-bold">Needs attention</h2>
+      {items.length === 0 ? <p className="text-sm text-muted">All clear. Nothing is waiting for you.</p> : (
+        <ul className="grid gap-2 sm:grid-cols-2">
+          {items.map(i => <li key={i.text} className="flex items-center justify-between gap-3 rounded-2xl bg-orange-50 px-4 py-2.5 text-sm"><span><b>{i.n}</b> {i.text}</span><Link href={i.href} className="font-semibold text-primary-dark underline underline-offset-4">{i.action}</Link></li>)}
+        </ul>
+      )}
+    </section>
   );
 }

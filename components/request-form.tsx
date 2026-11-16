@@ -112,9 +112,9 @@ export function RequestForm({ defaults, quick, today, min, max, adminCustomerId,
 
       {good && state.needsPayment && payHref && (
         <div className="rounded-3xl border border-orange-300 bg-orange-50 p-5">
-          <p className="font-bold">One more step: pay the €15 membership to confirm your booking.</p>
-          <p className="mb-3 text-sm text-muted">Your request is saved. It is confirmed as soon as the membership is paid and your cleaner accepts.</p>
-          <a href={payHref} className="inline-block rounded-full bg-primary px-6 py-3 font-bold text-ink-deep shadow-[0_10px_28px_-10px_rgba(16,177,199,.95)] transition hover:bg-mint">Pay €15 membership now</a>
+          <p className="font-bold">One more step: pay €15 to get a cleaner assigned.</p>
+          <p className="mb-3 text-sm text-muted">Your request is saved. Once the membership is paid, we assign your regular cleaner and a backup, and the booking is confirmed when your cleaner accepts.</p>
+          <a href={payHref} className="inline-block rounded-full bg-primary px-6 py-3 font-bold text-ink-deep shadow-[0_10px_28px_-10px_rgba(16,177,199,.95)] transition hover:bg-mint">Pay €15 now</a>
         </div>
       )}
       {msg && <p role="status" className={`rounded-2xl border px-4 py-3 text-sm ${good ? "border-primary/40 bg-primary/10" : "border-red-300 bg-red-50 text-red-800"}`}>{msg}</p>}

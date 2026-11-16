@@ -30,7 +30,7 @@ export async function OverviewBody({ c, today, base, adminId }: Props) {
   const steps = [
     { label: "Free account", done: true },
     { label: "First cleaning request", done: hasRequest, href: `${base}/request` },
-    { label: "Pay the membership", done: m.status === "active" && !due, href: `${base}/pay` },
+    { label: "Pay €15 to get a cleaner", done: m.status === "active" && !due, href: `${base}/pay` },
     { label: "Cleaner confirms", done: accepted, href: undefined },
   ];
   const nextStep = steps.findIndex(x => !x.done);
@@ -38,7 +38,7 @@ export async function OverviewBody({ c, today, base, adminId }: Props) {
     <>
       {owes && !adminId && (
         <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-orange-300 bg-orange-50 p-5">
-          <div><p className="font-bold">{m.status === "past_due" ? "Your membership payment is overdue" : due ? "Your membership renewal is due" : "Pay the membership to confirm your first cleaning"}</p><p className="text-sm text-muted">{hasRequest && m.status === "pending_payment" ? "Your request is saved and waiting for the €15 membership." : "It takes a minute."}</p></div>
+          <div><p className="font-bold">{m.status === "past_due" ? "Your payment is overdue. Pay €15 to keep your cleaner assigned" : due ? "Your membership renewal is due. Pay €15 to keep your cleaner assigned" : "Pay €15 to get a cleaner assigned"}</p><p className="text-sm text-muted">{m.status === "pending_payment" ? (hasRequest ? "Your request is saved. Once the membership is paid, we assign your regular cleaner and a backup." : "Once the membership is paid, we assign your regular cleaner and a backup.") : "Your visits stay on hold until the payment is made."}</p></div>
           <Link href={`${base}/pay`} className="rounded-full bg-primary px-6 py-3 font-bold text-ink-deep shadow-[0_10px_28px_-10px_rgba(16,177,199,.95)] transition hover:bg-mint">Pay {price} now</Link>
         </div>
       )}

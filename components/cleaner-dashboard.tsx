@@ -47,8 +47,25 @@ export async function CleanerDashboardBody({ email, adminId }: { email: string; 
       where lower(c.email) = lower($1) and c.status = 'approved'
       order by w.created_at`, [email])).rows as { name: string; street: string | null; house_number: string | null; house_number_addition: string | null; postcode: string | null; city: string | null; role: string }[];
 
+  const track = ["new", "contacted", "interview_scheduled", "documents_requested", "approved"];
+  const at = app ? track.indexOf(app.status) : -1;
   return (
     <>
+      {meId && toAnswer.length > 0 && (
+        <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-orange-300 bg-orange-50 p-5">
+          <div><p className="font-bold">{toAnswer.length === 1 ? "1 cleaning request needs your answer" : `${toAnswer.length} cleaning requests need your answer`}</p><p className="text-sm text-muted">Please accept or decline so the customer knows.</p></div>
+          <a href="#requests" className="rounded-full bg-primary px-6 py-3 font-bold text-ink-deep hover:bg-mint">Answer now</a>
+        </div>
+      )}
+      {app && at !== -1 && at < track.length - 1 && (
+        <ol aria-label="Application progress" className="mb-6 grid gap-2 rounded-3xl border border-line bg-white p-4 text-sm sm:grid-cols-5">
+          {track.map((k, i) => (
+            <li key={k} aria-current={i === at ? "step" : undefined} className={`flex items-center gap-2 rounded-2xl px-3 py-2 ${i < at ? "text-green-800" : i === at ? "bg-primary/15 font-semibold" : "text-muted"}`}>
+              <span className={`flex h-6 w-6 flex-none items-center justify-center rounded-full text-xs font-bold ${i < at ? "bg-green-600 text-white" : "border border-line"}`}>{i < at ? "✓" : i + 1}</span>{steps[k].title}
+            </li>
+          ))}
+        </ol>
+      )}
       <div className="grid gap-5 md:grid-cols-3">
         <Card icon={ClipboardList} hover={false}><h2 className="mb-1 font-bold">Your application</h2>
           {step ? <><p className="font-semibold text-primary-dark">{step.title}</p><p className="mt-1 text-sm text-muted">{step.text}</p></> :
@@ -66,9 +83,9 @@ export async function CleanerDashboardBody({ email, adminId }: { email: string; 
       </div>
 
       {meId && (
-        <div className="mt-10">
+        <div id="requests" className="mt-10 scroll-mt-24">
           <h2 className="mb-3 text-2xl font-medium">Cleaning requests</h2>
-          {toAnswer.length === 0 && accepted.length === 0 && <p className="rounded-3xl border border-dashed border-line bg-white p-6 text-muted">No cleaning requests for you right now. New requests appear here for you to accept or decline.</p>}
+          {toAnswer.length === 0 && accepted.length === 0 && <p className="rounded-3xl border border-dashed border-line bg-white p-6 text-muted">No cleaning requests for you right now. New requests appear here for you to accept or decline. A request only reaches you after the customer has paid.</p>}
           {toAnswer.length > 0 && <><h3 className="mb-3 mt-2 text-lg font-semibold">New: please answer ({toAnswer.length})</h3><div className="grid gap-4">{toAnswer.map(r => <RequestCard key={r.id} r={r} adminId={adminId} answer />)}</div></>}
           {accepted.length > 0 && <><h3 className="mb-3 mt-8 text-lg font-semibold">Accepted</h3><div className="grid gap-4">{accepted.map(r => <RequestCard key={r.id} r={r} adminId={adminId} withdraw />)}</div></>}
           {history.length > 0 && <><h3 className="mb-3 mt-8 text-lg font-semibold">Earlier</h3><div className="grid gap-3">{history.map(r => <RequestCard key={r.id} r={r} compact />)}</div></>}
