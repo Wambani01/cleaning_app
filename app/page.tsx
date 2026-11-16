@@ -49,13 +49,13 @@ export default function Home() {
         <Container>
           <div className="grid gap-6 md:grid-cols-2">
             {[
-              { img: "/images/journey-homeowner.jpg", alt: "A homeowner relaxing on her sofa in a clean, sunlit living room", tag: "For homeowners", title: "Find a regular cleaner", text: "Create an account, tell us where you live, and we match you with a regular cleaner and a backup.", href: "/join", cta: "I need regular cleaning", variant: "primary" as const },
-              { img: "/images/journey-cleaner.jpg", alt: "A smiling cleaner carrying a cleaning caddy through a bright hallway", tag: "For cleaners", title: "Work as an independent cleaner", text: "Apply, meet us on video, and we introduce you to households near you in Amsterdam.", href: "/apply", cta: "Work as a cleaner", variant: "dark" as const },
+              { img: "/images/journey-homeowner.jpg", pos: "object-[50%_30%]", alt: "A homeowner relaxing on her sofa in a clean, sunlit living room", tag: "For homeowners", title: "Find a regular cleaner", text: "Create an account, tell us where you live, and we match you with a regular cleaner and a backup.", href: "/join", cta: "I need regular cleaning", variant: "primary" as const },
+              { img: "/images/journey-cleaner.jpg", pos: "object-[50%_6%]", alt: "A smiling cleaner carrying a cleaning caddy through a bright hallway", tag: "For cleaners", title: "Work as an independent cleaner", text: "Apply, meet us on video, and we introduce you to households near you in Amsterdam.", href: "/apply", cta: "Work as a cleaner", variant: "dark" as const },
             ].map((j, i) => (
               <Reveal key={j.href} delay={i * 120}>
                 <article className="group overflow-hidden rounded-[2rem] border border-line bg-white shadow-[0_30px_60px_-30px_rgba(4,38,44,.45)] transition duration-500 hover:-translate-y-1.5">
                   <div className="relative aspect-[16/9] overflow-hidden">
-                    <Image src={j.img} alt={j.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover transition duration-[1200ms] group-hover:scale-105" />
+                    <Image src={j.img} alt={j.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className={`object-cover ${j.pos} transition duration-[1200ms] group-hover:scale-105`} />
                     <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-primary-deep backdrop-blur">{j.tag}</span>
                   </div>
                   <div className="p-7 sm:p-8">
