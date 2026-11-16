@@ -118,7 +118,7 @@ export function MembershipPanel({ customerId, status, startedOn, nextBilling, re
         {status === "active" && <form action={activateMembership}><input type="hidden" name="waitlistId" value={customerId} /><input type="hidden" name="returnTo" value={returnTo} /><button className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-ink-deep hover:bg-mint">Record renewal payment</button></form>}
         {status === "active" && <form action={cancelMembership}><input type="hidden" name="waitlistId" value={customerId} /><input type="hidden" name="returnTo" value={returnTo} /><button className="rounded-full border border-red-300 px-4 py-2 text-sm font-semibold text-red-800 hover:bg-red-50">Cancel membership</button></form>}
       </div>
-      <p className="mt-3 text-xs text-muted">Payments are recorded by hand until online payment is connected.</p>
+      <p className="mt-3 text-xs text-muted">Customers pay with a test card on their Payments tab. Use this to record a payment taken outside the app.</p>
     </Card>
   );
 }

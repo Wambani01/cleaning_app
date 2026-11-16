@@ -1,10 +1,11 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { recordManualMembership, chargeCompletedRequest, processDuePayments } from "@/lib/payments";
 import { pool } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin";
 import { STATUSES } from "@/lib/statuses";
-import { nextBillingDate, todayAmsterdam } from "@/lib/scheduling";
+import { todayAmsterdam } from "@/lib/scheduling";
 import { ACCEPT_SQL, DECLINE_SQL } from "@/lib/requests";
 
 
@@ -80,23 +81,10 @@ export async function activateMembership(formData: FormData) {
   const waitlistId = String(formData.get("waitlistId") ?? ""), returnTo = adminReturn(formData);
   if (!UUID.test(waitlistId)) throw new Error("Invalid input");
   if (!(await pool.query("select 1 from public.customer_waitlist where id = $1", [waitlistId])).rowCount) throw new Error("Unknown customer");
-  const today = todayAmsterdam(), next = nextBillingDate(today);
-  const client = await pool.connect();
-  try {
-    await client.query("begin");
-    const prev = (await client.query("select status, started_on from public.customer_memberships where waitlist_id = $1", [waitlistId])).rows[0];
-    const renewing = prev?.status === "active";
-    await client.query(
-      `insert into public.customer_memberships (waitlist_id, status, started_on, billing_day, next_billing_date, activated_by) values ($1,'active',$2,null,$3,$4)
-       on conflict (waitlist_id) do update set status = 'active', started_on = case when public.customer_memberships.status = 'active' then public.customer_memberships.started_on else excluded.started_on end,
-         billing_day = null, next_billing_date = excluded.next_billing_date, activated_by = excluded.activated_by, updated_at = now()`,
-      [waitlistId, today, next, admin.user.email]);
-    // Requests that were waiting for payment move on: confirmed if their cleaner already accepted, otherwise just requested.
-    await client.query("update public.cleaning_requests set status = case when cleaner_response = 'accepted' then 'confirmed' else 'requested' end, updated_at = now() where waitlist_id = $1 and status = 'awaiting_payment'", [waitlistId]);
-    await client.query("commit");
-    refreshAll();
-    return backTo(returnTo, renewing ? `Renewal recorded. The next payment is due on ${next}.` : `Membership activated. The next payment is due on ${next} (30 days from today).`);
-  } catch (e) { await client.query("rollback").catch(() => {}); throw e; } finally { client.release(); }
+  const prev = (await pool.query("select status from public.customer_memberships where waitlist_id = $1", [waitlistId])).rows[0];
+  const next = await recordManualMembership(waitlistId, admin.user.email);
+  refreshAll();
+  return backTo(returnTo, prev?.status === "active" ? `Renewal recorded. The next payment is due on ${next}.` : `Membership activated. The next payment is due on ${next} (30 days from today).`);
 }
 
 /** Ends a membership. */
@@ -122,6 +110,7 @@ export async function updateRequest(formData: FormData) {
     if (r.cleaner_response !== "accepted") return backTo(returnTo, "The cleaner has not accepted this request yet.");
   }
   await pool.query("update public.cleaning_requests set status = $2, admin_notes = $3, updated_at = now() where id = $1", [id, status, notes || null]);
+  if (status === "completed") await chargeCompletedRequest(pool, id, (await requireAdmin())!.user.email);
   refreshAll();
   backTo(returnTo, "Request updated.");
 }
@@ -167,4 +156,13 @@ export async function setCleanerResponse(formData: FormData) {
   else await pool.query(`${DECLINE_SQL} where r.id = $1 and ${open} and r.cleaner_response in ('pending','accepted')`, [id, "Recorded by admin"]);
   refreshAll();
   backTo(returnTo, answer === "accept" ? "Recorded: the cleaner accepted." : "Recorded: the cleaner declined. Use Reassign to choose someone else.");
+}
+
+/** Test mode: charges every saved card that is due. */
+export async function processDue() {
+  const admin = await requireAdmin();
+  if (!admin) throw new Error("Not allowed");
+  const r = await processDuePayments(admin.user.email);
+  refreshAll();
+  backTo("/admin?tab=payments", `Processed due payments (test mode): ${r.charged} charged, ${r.failed} failed, ${r.skipped} skipped (no saved card).`);
 }

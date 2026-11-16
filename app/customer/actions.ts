@@ -72,3 +72,18 @@ export async function cancelRequest(f: FormData) {
   await pool.query("update public.cleaning_requests set status = 'cancelled', updated_at = now() where id = $1 and waitlist_id = $2 and status in ('requested','awaiting_payment','confirmed')", [reqId, who.id]);
   refresh();
 }
+
+/** The customer pays what is due with a TEST card. Only customers can pay, and only for themselves. Card details are never stored beyond the last four digits. */
+export async function payNow(_p: FormState, f: FormData): Promise<FormState> {
+  const s = await getSession();
+  if (!s || s.user.role !== "customer") return fail("Please sign in as a customer to pay.");
+  const row = (await pool.query("select id from public.customer_waitlist where lower(email) = lower($1) limit 1", [s.user.email])).rows[0];
+  if (!row) return fail("We need your address first.");
+  const { checkCard } = await import("@/lib/fake-payments");
+  const { payOutstanding } = await import("@/lib/payments");
+  const card = checkCard({ number: val(f, "number", 30), expiry: val(f, "expiry", 9), cvc: val(f, "cvc", 5), name: val(f, "name", 80) });
+  if (!card.ok) return fail(card.message);
+  const res = await payOutstanding(row.id, card, f.get("save") === "on", "customer");
+  refresh(); revalidatePath("/customer/pay");
+  return res;
+}

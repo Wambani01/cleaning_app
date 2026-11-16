@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, LayoutDashboard, PlusCircle, ShieldCheck } from "lucide-react";
+import { CalendarDays, CreditCard, LayoutDashboard, PlusCircle, ShieldCheck } from "lucide-react";
 import { Container } from "@/components/ui";
 import { SignOutButton } from "@/components/auth-forms";
 
@@ -12,6 +12,7 @@ export function CustomerShell({ name, email, current, base = "/customer", adminF
     { href: base, label: "Overview", icon: LayoutDashboard },
     { href: `${base}/request`, label: "Request a cleaning", icon: PlusCircle },
     { href: `${base}/schedule`, label: "Regular schedule", icon: CalendarDays },
+    { href: `${base}/pay`, label: "Payments", icon: CreditCard },
   ];
   return (
     <main className="min-h-[70vh] bg-sand/60 py-10"><Container>

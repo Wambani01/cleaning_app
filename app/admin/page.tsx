@@ -6,7 +6,8 @@ import { requirePortal } from "@/lib/admin";
 import { WrongPortal } from "@/components/wrong-portal";
 import { pool } from "@/lib/db";
 import { STATUSES } from "@/lib/statuses";
-import { updateApplication } from "./actions";
+import { updateApplication, processDue } from "./actions";
+import { euro } from "@/lib/fake-payments";
 import { AdminRequestCard, REQUEST_JOINS, REQUEST_SELECT, memTone, type AdminRequest } from "@/components/admin-requests";
 import { membershipLabel, requestLabel, type MembershipStatus } from "@/lib/customer";
 
@@ -78,6 +79,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         <Link href="/admin?tab=applications" className={tabCls(tab === "applications")}>Cleaner applications</Link>
         <Link href="/admin?tab=requests" className={tabCls(tab === "requests")}>Cleaning requests ({openRequests})</Link>
         <Link href="/admin?tab=waitlist" className={tabCls(tab === "waitlist")}>Customers</Link>
+        <Link href="/admin?tab=payments" className={tabCls(tab === "payments")}>Payments</Link>
       </div>
 
       {msg && <p role="status" className="mb-4 rounded-2xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm">{msg}</p>}
@@ -135,6 +137,8 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         </>
       )}
 
+      {tab === "payments" && <AdminPayments />}
+
       {tab === "waitlist" && (
         <div className="overflow-x-auto rounded-2xl border border-line bg-white">
           <table className="w-full text-left text-sm">
@@ -156,5 +160,36 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         </div>
       )}
     </Container></main>
+  );
+}
+
+async function AdminPayments() {
+  const tot = (await pool.query("select coalesce(sum(amount_cents) filter (where status='succeeded'),0)::int as paid, coalesce(sum(amount_cents) filter (where status='due'),0)::int as due, count(*) filter (where status='failed')::int as failed from public.payments")).rows[0];
+  const rows = (await pool.query("select p.id, p.kind, p.description, p.amount_cents, p.status, p.provider, p.card_last4, p.failure_reason, p.receipt_no, p.created_at, w.name, w.id as wid from public.payments p join public.customer_waitlist w on w.id = p.waitlist_id order by p.created_at desc limit 100")).rows;
+  return (
+    <div className="grid gap-5">
+      <p role="note" className="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm"><b>TEST MODE.</b> Payments use a fake provider. No real money moves. Stripe replaces it later.</p>
+      <div className="flex flex-wrap items-center gap-4">
+        <span className="rounded-2xl border border-line bg-white px-4 py-3 text-sm">Collected <b>{euro(tot.paid)}</b></span>
+        <span className="rounded-2xl border border-line bg-white px-4 py-3 text-sm">Due <b>{euro(tot.due)}</b></span>
+        <span className="rounded-2xl border border-line bg-white px-4 py-3 text-sm">Failed attempts <b>{tot.failed}</b></span>
+        <form action={processDue}><button className="rounded-full bg-primary-deep px-5 py-2.5 text-sm font-bold text-white">Process due payments (test)</button></form>
+      </div>
+      <div className="overflow-x-auto rounded-2xl border border-line bg-white">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-surface text-muted"><tr><th className="p-3">Date</th><th className="p-3">Customer</th><th className="p-3">For</th><th className="p-3">Amount</th><th className="p-3">Status</th><th className="p-3">Receipt</th></tr></thead>
+          <tbody>
+            {rows.length === 0 && <tr><td className="p-3 text-muted" colSpan={6}>No payments yet.</td></tr>}
+            {rows.map(r => (
+              <tr key={r.id} className="border-t border-line"><td className="p-3 whitespace-nowrap">{fmt(r.created_at)}</td>
+                <td className="p-3"><Link className="text-primary-dark underline" href={`/admin/customers/${r.wid}/view/pay`}>{r.name}</Link></td><td className="p-3">{r.description}</td>
+                <td className="p-3 whitespace-nowrap">{euro(r.amount_cents)}</td>
+                <td className="p-3">{r.status === "succeeded" ? `Paid${r.provider === "manual" ? " (manual)" : r.card_last4 ? ` ****${r.card_last4}` : ""}` : r.status === "failed" ? `Failed: ${r.failure_reason}` : "Due"}</td>
+                <td className="p-3 whitespace-nowrap">{r.receipt_no ?? ""}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }

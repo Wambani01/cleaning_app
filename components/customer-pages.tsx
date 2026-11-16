@@ -30,7 +30,8 @@ export async function OverviewBody({ c, today, base, adminId }: Props) {
           <h2 className="mb-1 font-bold">Membership</h2>
           <p className="mb-2 text-sm font-semibold text-primary-dark">{membershipLabel[m.status]}</p>
           {m.status === "free" && <p className="text-sm text-muted">The account is free. The {price} membership is paid with the first cleaning request.</p>}
-          {m.status === "pending_payment" && <p className="text-sm text-muted">The first payment of {price} is needed to confirm the cleaning. Online payment is coming soon, and we will contact you with the details.</p>}
+          {m.status === "pending_payment" && <p className="text-sm text-muted">The first payment of {price} is needed to confirm the cleaning. </p>}
+          {(m.status === "pending_payment" || m.status === "past_due" || due) && <Link href={`${base}/pay`} className="mt-3 inline-block rounded-full bg-primary px-5 py-2 text-sm font-bold text-ink-deep">Pay {price} now</Link>}
           {m.status === "active" && <p className="text-sm text-muted">The {price} membership renews {BILLING_PERIOD_DAYS} days after each payment. {due ? <b className="text-orange-800">The next payment is due now.</b> : <>Next payment: <b>{m.next_billing_date ? formatDate(m.next_billing_date, long) : "-"}</b>.</>} Cleaning is {hourlyRate} per hour.</p>}
           {(m.status === "past_due" || m.status === "cancelled") && <p className="text-sm text-muted">{m.status === "past_due" ? "The last membership payment is overdue." : "The membership has ended. A new request starts it again."}</p>}
         </Card>
@@ -74,7 +75,7 @@ export function RequestBody({ c, today, base, adminId }: Props) {
               <li>The account is free. Nothing is paid until a cleaning request is made.</li>
               <li>With the first request, the {price} membership is paid. It renews {BILLING_PERIOD_DAYS} days after each payment.</li>
               <li>Cleaning is {hourlyRate} per hour.</li>
-              {c.membership.status !== "active" && <li className="font-medium text-ink">Online payment is coming soon. After the first request we contact you with the payment details.</li>}
+              {c.membership.status !== "active" && <li className="font-medium text-ink">Payment runs in test mode for now. After the first request, pay on the <Link className="underline" href={`${base}/pay`}>Payments</Link> page with a test card.</li>}
             </ul>
           </Card>
           {!c.schedule && <Card hover={false}><p className="text-sm text-muted">Want the same slot every week? <Link className="font-semibold text-primary-dark underline" href={`${base}/schedule`}>Set the regular schedule</Link> and its dates appear above as shortcuts.</p></Card>}
