@@ -26,7 +26,7 @@ export function Hero({ image, position = "object-center", eyebrow, title, text, 
         <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink-deep/60 to-transparent" />
       </div>
       <Container>
-        <div className={`flex items-end pt-48 md:items-center md:py-24 ${tall ? "pb-28 md:pb-24" : "pb-12"} ${tall ? "min-h-[calc(100svh-4rem)] lg:min-h-[82svh]" : "min-h-[32rem] lg:min-h-[34rem]"}`}>
+        <div className={`flex items-end pt-48 md:items-center md:py-24 ${tall ? "pb-36 md:pb-44" : "pb-12"} ${tall ? "min-h-[calc(100svh-4rem)] lg:min-h-[82svh]" : "min-h-[32rem] lg:min-h-[34rem]"}`}>
           <div className="max-w-2xl">
             <p className="rise mb-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-ink-deep/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-mint backdrop-blur-sm" style={{ "--d": "80ms" } as React.CSSProperties}>
               <span className="h-1.5 w-1.5 rounded-full bg-mint" aria-hidden="true" />{eyebrow}
