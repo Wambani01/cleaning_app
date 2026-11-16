@@ -23,8 +23,35 @@ export async function OverviewBody({ c, today, base, adminId }: Props) {
   const upcoming = c.requests.filter(r => r.requested_date >= today && r.status !== "cancelled" && r.status !== "completed").sort((a, b) => (a.requested_date + a.start_time).localeCompare(b.requested_date + b.start_time));
   const past = c.requests.filter(r => !upcoming.includes(r));
   const due = m.status === "active" && m.next_billing_date !== null && m.next_billing_date <= today;
+  const owes = m.status === "pending_payment" || m.status === "past_due" || due;
+  const hasRequest = c.requests.some(r => r.status !== "cancelled");
+  const hasCleaner = !!asg;
+  const accepted = c.requests.some(r => r.cleaner_response === "accepted" && r.status !== "cancelled");
+  const steps = [
+    { label: "Free account", done: true },
+    { label: "First cleaning request", done: hasRequest, href: `${base}/request` },
+    { label: "Pay the membership", done: m.status === "active" && !due, href: `${base}/pay` },
+    { label: "Cleaner confirms", done: accepted, href: undefined },
+  ];
+  const nextStep = steps.findIndex(x => !x.done);
   return (
     <>
+      {owes && !adminId && (
+        <div role="status" className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-orange-300 bg-orange-50 p-5">
+          <div><p className="font-bold">{m.status === "past_due" ? "Your membership payment is overdue" : due ? "Your membership renewal is due" : "Pay the membership to confirm your first cleaning"}</p><p className="text-sm text-muted">{hasRequest && m.status === "pending_payment" ? "Your request is saved and waiting for the €15 membership." : "It takes a minute."}</p></div>
+          <Link href={`${base}/pay`} className="rounded-full bg-primary px-6 py-3 font-bold text-ink-deep shadow-[0_10px_28px_-10px_rgba(16,177,199,.95)] transition hover:bg-mint">Pay {price} now</Link>
+        </div>
+      )}
+      {nextStep !== -1 && !adminId && (
+        <ol aria-label="Getting started" className="mb-6 grid gap-2 rounded-3xl border border-line bg-white p-4 text-sm sm:grid-cols-4">
+          {steps.map((x, i) => (
+            <li key={x.label} aria-current={i === nextStep ? "step" : undefined} className={`flex items-center gap-2 rounded-2xl px-3 py-2 ${x.done ? "text-green-800" : i === nextStep ? "bg-primary/15 font-semibold" : "text-muted"}`}>
+              <span className={`flex h-6 w-6 flex-none items-center justify-center rounded-full text-xs font-bold ${x.done ? "bg-green-600 text-white" : "border border-line"}`}>{x.done ? "✓" : i + 1}</span>
+              {i === nextStep && x.href ? <Link className="underline underline-offset-4" href={x.href}>{x.label}</Link> : x.label}
+            </li>
+          ))}
+        </ol>
+      )}
       <div className="grid gap-5 md:grid-cols-3">
         <Card icon={Wallet} hover={false}>
           <h2 className="mb-1 font-bold">Membership</h2>
@@ -49,7 +76,7 @@ export async function OverviewBody({ c, today, base, adminId }: Props) {
       </div>
 
       <div className="mb-3 mt-10 flex flex-wrap items-center justify-between gap-3"><h2 className="text-2xl font-medium">Upcoming cleaning requests</h2><ButtonLink href={`${base}/request`}>Request a cleaning</ButtonLink></div>
-      <RequestList requests={upcoming} adminId={adminId} empty="No cleaning requests yet. Request the first cleaning to get started." />
+      <RequestList requests={upcoming} adminId={adminId} payHref={adminId ? undefined : `${base}/pay`} empty="No cleaning requests yet. Request the first cleaning to get started." />
       {past.length > 0 && <><h2 className="mb-3 mt-10 text-2xl font-medium">Earlier requests</h2><RequestList requests={past} adminId={adminId} empty="" /></>}
     </>
   );
@@ -66,7 +93,7 @@ export function RequestBody({ c, today, base, adminId }: Props) {
         <div>
           <h2 className="mb-1 text-3xl font-medium">Request a cleaning</h2>
           <p className="mb-6 text-muted">Tell us about the cleaning. It takes about two minutes, and it works for the first cleaning and every one after.</p>
-          <RequestForm defaults={defaults} quick={quick} today={today} min={min} max={max} adminCustomerId={adminId} />
+          <RequestForm defaults={defaults} quick={quick} today={today} min={min} max={max} adminCustomerId={adminId} payHref={adminId ? undefined : `${base}/pay`} />
         </div>
         <div className="grid content-start gap-5 lg:sticky lg:top-24">
           <Card hover={false}>

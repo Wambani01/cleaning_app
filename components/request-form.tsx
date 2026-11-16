@@ -28,7 +28,7 @@ const Pill = ({ children }: { children: React.ReactNode }) => <span className="s
  * The full cleaning request form: when, where, the home, what to clean, and things to know.
  * Used by customers for themselves and by admins for a customer (adminCustomerId).
  */
-export function RequestForm({ defaults, quick, today, min, max, adminCustomerId }: { defaults: Address; quick: { date: ISODate; time: string; hours: number }[]; today: ISODate; min: ISODate; max: ISODate; adminCustomerId?: string }) {
+export function RequestForm({ defaults, quick, today, min, max, adminCustomerId, payHref }: { defaults: Address; quick: { date: ISODate; time: string; hours: number }[]; today: ISODate; min: ISODate; max: ISODate; adminCustomerId?: string; payHref?: string }) {
   const [state, action, pending] = useActionState(createRequest, initial);
   const [local, setLocal] = useState("");
   const [when, setWhen] = useState({ date: "", time: quick[0]?.time ?? "09:00", hours: quick[0]?.hours ?? 3 });
@@ -110,6 +110,13 @@ export function RequestForm({ defaults, quick, today, min, max, adminCustomerId 
         <Field label="Anything else? (optional)"><textarea name="notes" rows={3} maxLength={1000} className={inputClass} placeholder="For example: how to get in, parking, rooms to focus on" /></Field>
       </Section>
 
+      {good && state.needsPayment && payHref && (
+        <div className="rounded-3xl border border-orange-300 bg-orange-50 p-5">
+          <p className="font-bold">One more step: pay the €15 membership to confirm your booking.</p>
+          <p className="mb-3 text-sm text-muted">Your request is saved. It is confirmed as soon as the membership is paid and your cleaner accepts.</p>
+          <a href={payHref} className="inline-block rounded-full bg-primary px-6 py-3 font-bold text-ink-deep shadow-[0_10px_28px_-10px_rgba(16,177,199,.95)] transition hover:bg-mint">Pay €15 membership now</a>
+        </div>
+      )}
       {msg && <p role="status" className={`rounded-2xl border px-4 py-3 text-sm ${good ? "border-primary/40 bg-primary/10" : "border-red-300 bg-red-50 text-red-800"}`}>{msg}</p>}
       <div><button disabled={pending} className="rounded-full bg-primary px-8 py-3.5 text-lg font-bold text-ink-deep shadow-[0_10px_28px_-10px_rgba(16,177,199,.95)] transition hover:bg-mint disabled:opacity-60">{pending ? "Sending…" : "Send cleaning request"}</button></div>
     </form>

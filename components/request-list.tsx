@@ -22,7 +22,7 @@ function cleanerLine(r: CleaningRequest) {
 }
 
 /** The customer's requests. Open requests can be cancelled. `adminId` is set when an admin is acting for the customer. */
-export function RequestList({ requests, empty, adminId }: { requests: CleaningRequest[]; empty: string; adminId?: string }) {
+export function RequestList({ requests, empty, adminId, payHref }: { requests: CleaningRequest[]; empty: string; adminId?: string; payHref?: string }) {
   if (!requests.length) return <p className="rounded-3xl border border-dashed border-line bg-white p-6 text-muted">{empty}</p>;
   return (
     <ul className="grid gap-3">
@@ -40,6 +40,9 @@ export function RequestList({ requests, empty, adminId }: { requests: CleaningRe
               )}
             </div>
           </div>
+          {r.status === "awaiting_payment" && payHref && (
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-orange-50 px-4 py-3 text-sm"><span>This booking is confirmed once the €15 membership is paid.</span><a href={payHref} className="rounded-full bg-primary px-5 py-2 font-bold text-ink-deep hover:bg-mint">Pay €15 now</a></div>
+          )}
           <div className="mt-2 grid gap-0.5 text-sm">
             {addressLine(r) && <p className="text-muted">{addressLine(r)}</p>}
             {(r.property_type || r.tasks.length > 0) && <p className="text-muted">{summarise(r)}</p>}

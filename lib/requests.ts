@@ -7,7 +7,7 @@ export { parseRequestForm };
 export type { RequestInput };
 import { tidyPostcode } from "@/lib/validate";
 
-export type FormState = { ok: boolean; message: string };
+export type FormState = { ok: boolean; message: string; needsPayment?: boolean };
 
 /**
  * Creates a cleaning request. Used for customers asking for themselves and for admins asking on a customer's behalf.
@@ -51,7 +51,7 @@ export async function createCleaningRequest(waitlistId: string, by: string, inpu
     const when = `${formatDate(input.date)} at ${input.time}`;
     return paid
       ? { ok: true, message: asg ? `Request received for ${when}. We have sent it to ${asg.first_name} to accept, and we will confirm it shortly.` : `Request received for ${when}. We will confirm it shortly.` }
-      : { ok: true, message: `Request received for ${when}. To confirm it, the first payment of €15 is needed. Open the Payments tab to pay (test mode, no real money).` };
+      : { ok: true, message: `Request received for ${when}. To confirm it, the first payment of €15 is needed. Pay it below to lock in the booking (test mode, no real money).`, needsPayment: true };
   } catch (e) {
     await client.query("rollback").catch(() => {});
     console.error("createCleaningRequest failed", e instanceof Error ? e.message : e);
