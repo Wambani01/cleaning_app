@@ -6,6 +6,7 @@ import { ArrowRight, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const links = [
+  { href: "/", label: "Home" },
   { href: "/apply", label: "Work as a cleaner" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
@@ -20,7 +21,7 @@ export function SiteHeader({ name }: { name: string }) {
     const on = () => setScrolled(window.scrollY > 8);
     on(); window.addEventListener("scroll", on, { passive: true }); return () => window.removeEventListener("scroll", on);
   }, []);
-  const active = (h: string) => path === h || path.startsWith(h + "/");
+  const active = (h: string) => (h === "/" ? path === "/" : path === h || path.startsWith(h + "/"));
 
   return (
     <header className={`sticky top-0 z-50 border-b backdrop-blur-xl transition-colors duration-300 ${scrolled || open ? "border-line bg-white/90 shadow-sm" : "border-transparent bg-white/75"}`}>

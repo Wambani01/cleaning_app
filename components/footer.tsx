@@ -19,7 +19,7 @@ export function SiteFooter() {
           <nav aria-label="For cleaners" className={col}><p className="mb-1 font-semibold text-mint">For cleaners</p>
             <Link className={link} href="/apply">Work as a cleaner</Link><Link className={link} href="/apply#how-it-works">How joining works</Link><Link className={link} href="/apply#faq">Cleaner FAQ</Link><Link className={link} href="/cleaner/sign-in">Cleaner sign in</Link></nav>
           <nav aria-label="Company" className={col}><p className="mb-1 font-semibold text-mint">Company</p>
-            <Link className={link} href="/about">About</Link><Link className={link} href="/contact">Contact</Link><Link className={link} href="/privacy">Privacy policy</Link><Link className={link} href="/terms">Terms and cancellation</Link></nav>
+            <Link className={link} href="/">Home</Link><Link className={link} href="/about">About</Link><Link className={link} href="/contact">Contact</Link><Link className={link} href="/privacy">Privacy policy</Link><Link className={link} href="/terms">Terms and cancellation</Link></nav>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 py-6 text-xs text-white/55">
           <p>© {new Date().getFullYear()} {company.legalName}, Amsterdam</p>
