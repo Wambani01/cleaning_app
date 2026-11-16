@@ -7,6 +7,8 @@ export const tagline = "Affordable regular cleaners in Amsterdam, with a backup 
 export const slogan = "A spotless home, without the stress.";
 export const price = "€15";
 export const hourlyRate = "€15";
+export const HOURLY_EUR = 15;
+export const MEMBERSHIP_EUR = 15;
 
 export function Container({ children, narrow = false }: { children: React.ReactNode; narrow?: boolean }) {
   return <div className={`mx-auto px-5 ${narrow ? "max-w-3xl" : "max-w-6xl"}`}>{children}</div>;

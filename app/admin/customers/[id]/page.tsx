@@ -41,7 +41,13 @@ export default async function AssignPage({ params, searchParams }: { params: Pro
         <Link href="/admin?tab=waitlist" className="text-sm font-semibold text-primary-dark underline">← Back to the customer waitlist</Link>
         <SignOutButton to="/admin/sign-in" />
       </div>
-      <h1 className="mb-1 text-3xl font-bold">Assign a cleaner</h1>
+      <h1 className="mb-1 text-3xl font-bold">{customer.name}</h1>
+      <div className="mb-6 flex flex-wrap gap-3">
+        <Link href={`/admin/customers/${id}/view`} className="rounded-full bg-ink-deep px-5 py-2.5 text-sm font-bold text-white hover:bg-primary-deep">View client dashboard</Link>
+        <Link href={`/admin/customers/${id}/view/request`} className="rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-ink-deep hover:bg-mint">Create a cleaning request</Link>
+        {customer.phone && <a href={`tel:${customer.phone}`} className="rounded-full border border-line px-5 py-2.5 text-sm font-semibold hover:border-primary">Call client {customer.phone}</a>}
+      </div>
+      <h2 className="mb-1 text-2xl font-bold">Assign a cleaner</h2>
       <p className="mb-6 text-muted">Choose a cleaner for {customer.name}&apos;s home. Only approved cleaners are listed, the closest postcode area first.</p>
       {msg && <p role="status" className="mb-6 rounded-lg border border-primary/40 bg-primary/10 px-4 py-3 text-sm">{msg}</p>}
 
@@ -93,6 +99,7 @@ export default async function AssignPage({ params, searchParams }: { params: Pro
                 </div>
               </div>
               {c.availability && <p className="mt-2 text-sm"><b>Availability:</b> {c.availability}</p>}
+              <p className="mt-2 text-sm"><Link className="font-semibold text-primary-dark underline underline-offset-4" href={`/admin/cleaners/${c.id}/view`}>View cleaner dashboard</Link> · <a className="underline" href={`tel:${c.phone}`}>Call {c.phone}</a></p>
               {c.experience && <p className="mt-1 text-sm"><b>Experience:</b> {c.experience}</p>}
               <div className="mt-3 flex flex-wrap gap-2">
                 {(["regular", "backup"] as const).map(role => (

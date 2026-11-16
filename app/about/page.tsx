@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const principles = [
   { icon: Users, t: "We do the matching", d: "Homeowners should not have to compare strangers, and cleaners should not have to chase customers. Our team makes each match by hand." },
   { icon: ShieldCheck, t: "We check before we introduce", d: "Every cleaner applies, has a video interview with us and submits identity documents before they are approved." },
-  { icon: Eye, t: "We are clear about prices", d: `${price} a month and ${hourlyRate} per hour of cleaning. You see the numbers before you sign up.` },
+  { icon: Eye, t: "We are clear about prices", d: `${price} every 30 days and ${hourlyRate} per hour of cleaning. You see the numbers before you sign up.` },
   { icon: HandCoins, t: "We plan for things going wrong", d: "A backup cleaner is part of every membership, and breakage cover applies to accidental damage during a visit." },
 ];
 
@@ -35,7 +35,7 @@ export default function About() {
           <SectionTitle eyebrow="What we do" title="A platform that brings two sides together." />
           <Reveal delay={100}>
             <div className="grid gap-5 text-lg leading-relaxed text-muted">
-              <p>Amsta Clean helps households in Amsterdam find affordable, reliable regular cleaners. Creating an account is free. With your first cleaning request you pay a monthly membership, which gives you a vetted regular cleaner, a backup cleaner for the days your regular cleaner is unavailable, and breakage cover. You then pay an hourly rate for the cleaning.</p>
+              <p>Amsta Clean helps households in Amsterdam find affordable, reliable regular cleaners. Creating an account is free. With your first cleaning request you pay a membership that renews every 30 days, which gives you a vetted regular cleaner, a backup cleaner for the days your regular cleaner is unavailable, and breakage cover. You then pay an hourly rate for the cleaning.</p>
               <p>For cleaners, we are a way to find regular customers near home. Cleaners join as independent freelancers, choose their own days and hours, and we find the households and make the match.</p>
             </div>
           </Reveal>

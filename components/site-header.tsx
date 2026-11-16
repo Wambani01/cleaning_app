@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 const links = [
   { href: "/", label: "Home" },
+  { href: "/i-need-a-cleaner", label: "I need a cleaner" },
   { href: "/apply", label: "Work as a cleaner" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
@@ -33,9 +34,9 @@ export function SiteHeader({ name }: { name: string }) {
         <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
           {links.map(l => (
             <Link key={l.href} href={l.href} aria-current={active(l.href) ? "page" : undefined}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition hover:bg-sand ${active(l.href) ? "text-primary-deep" : "text-ink"}`}>{l.label}</Link>
+              className={`rounded-full px-3 py-2 text-sm font-medium transition hover:bg-sand ${active(l.href) ? "text-primary-deep" : "text-ink"}`}>{l.label}</Link>
           ))}
-          <Link href="/sign-in" className="rounded-full px-4 py-2 text-sm font-medium transition hover:bg-sand">Sign in</Link>
+          <Link href="/sign-in" className="rounded-full px-3 py-2 text-sm font-medium transition hover:bg-sand">Sign in</Link>
           <Link href="/join" className="group ml-2 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-ink-deep shadow-[0_8px_20px_-8px_rgba(16,177,199,.9)] transition hover:bg-mint">
             Create free account <ArrowRight size={16} className="transition group-hover:translate-x-0.5" aria-hidden="true" />
           </Link>

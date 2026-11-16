@@ -14,7 +14,7 @@ export default function SignInHub() {
       <div className="py-14"><Container>
         <div className="grid gap-6 md:grid-cols-2">
           <Card icon={User}>
-            <h2 className="mb-1 text-2xl font-medium">I need regular cleaning</h2>
+            <h2 className="mb-1 text-2xl font-medium">I need a cleaner</h2>
             <p className="mb-5 text-sm text-muted">Customer portal</p>
             <div className="flex flex-wrap gap-3"><Link href="/customer/sign-in" className="rounded-full bg-primary px-5 py-2.5 font-bold text-ink-deep hover:bg-mint">Sign in</Link><Link href="/customer/sign-up" className="rounded-full border border-line px-5 py-2.5 font-semibold hover:border-primary">Create free account</Link></div>
           </Card>

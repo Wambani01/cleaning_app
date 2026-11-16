@@ -4,8 +4,8 @@ import type { Faq } from "@/components/sections";
 // Everything below describes what the business actually offers today. Do not add claims that the product cannot back up.
 
 export const homeownerFaqs: Faq[] = [
-  { q: "What does it cost?", a: `Creating an account is free. You pay the ${price} membership when you make your first cleaning request, and it then renews on the same day each month. Cleaning is ${hourlyRate} per hour. Online payment is coming soon, so until then we contact you with the payment details after your first request.` },
-  { q: "When am I charged?", a: "Not when you sign up. Your first payment is the membership fee, after you make your first cleaning request. After that the fee is charged on the same day each month, to keep the service going." },
+  { q: "What does it cost?", a: `Creating an account is free. You pay the ${price} membership when you make your first cleaning request, and it then renews 30 days after each payment. Cleaning is ${hourlyRate} per hour. Online payment is coming soon, so until then we contact you with the payment details after your first request.` },
+  { q: "When am I charged?", a: "Not when you sign up. Your first payment is the membership fee, after you make your first cleaning request. After that the fee is charged every 30 days, to keep the service going." },
   { q: "How do I get matched with a cleaner?", a: "Create a free account with your address and phone number, and set your regular cleaning day in the calendar. Once you have made your first cleaning request, we look at our approved cleaners near your home and match you with a regular cleaner and a backup. We call you for a short orientation call before the first visit." },
   { q: "How do I ask for a cleaning?", a: "Set your regular day and time in your calendar. Then request a cleaning whenever you need your cleaner, on one of your regular days or any other date, up to six months ahead." },
   { q: "Can I choose my own cleaner?", a: "We do the matching for you, so you do not have to compare profiles. On the orientation call you can tell us what matters to you, and we take that into account." },

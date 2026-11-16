@@ -47,13 +47,12 @@ const todayIso = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Amsterdam"
 const add = (isoDate, n) => iso(new Date(Date.parse(isoDate + "T00:00:00Z") + n * 864e5));
 const weekdayOf = isoDate => ((new Date(Date.parse(isoDate + "T00:00:00Z")).getUTCDay() + 6) % 7) + 1; // 1 = Monday
 const nextWeekday = (from, wd) => add(from, (wd - weekdayOf(from) + 7) % 7);
-const dim = (y, m) => new Date(Date.UTC(y, m, 0)).getUTCDate();
-const nextBilling = (day, after) => { let y = +after.slice(0, 4), m = +after.slice(5, 7); for (let i = 0; i < 14; i++) { const c = `${y}-${String(m).padStart(2, "0")}-${String(Math.min(day, dim(y, m))).padStart(2, "0")}`; if (c > after) return c; if (++m > 12) { m = 1; y++; } } };
-const startedOn = add(todayIso, -12), billingDay = +startedOn.slice(8, 10);
+const nextBilling = paidOn => add(paidOn, 30);   // renews 30 days after the day of payment
+const startedOn = add(todayIso, -12);
 const tue1 = nextWeekday(add(todayIso, 1), 2), tue2 = add(tue1, 7), thu = nextWeekday(add(todayIso, 3), 4), sat = nextWeekday(add(todayIso, 5), 6);
 // [customer, membership status, schedule or null, requests: [date, time, hours, status, note]]
 const plans = {
-  "emma.deboer": { m: "active", sch: ["weekly", 2, tue1, "09:00", 3], reqs: [[tue1, "09:00", 3, "confirmed", "Please focus on the kitchen"], [tue2, "09:00", 3, "requested", null], [add(tue1, -14 - 5), "09:00", 3, "completed", null]] },
+  "emma.deboer": { m: "active", sch: ["weekly", 2, tue1, "09:00", 3], reqs: [[tue1, "09:00", 3, "confirmed", "Please focus on the kitchen", ["kitchen", "windows", "bathrooms", "floors"], 2, 8], [tue2, "09:00", 3, "requested", null, ["kitchen", "bathrooms", "floors", "dusting"], 2, 0], [add(tue1, -14 - 5), "09:00", 3, "completed", null]] },
   "lars.visser": { m: "pending_payment", sch: ["biweekly", 4, thu, "14:00", 2.5], reqs: [[thu, "14:00", 2.5, "awaiting_payment", "Ring the bell twice"]] },
   "daan.mulder": { m: "pending_payment", sch: null, reqs: [[sat, "10:00", 4, "awaiting_payment", null]] },
   "noor.bakker": { m: "free", sch: ["weekly", 5, nextWeekday(add(todayIso, 1), 5), "08:30", 2], reqs: [] },
@@ -61,10 +60,17 @@ const plans = {
 const extra = [];
 for (const [cust, p] of Object.entries(plans)) {
   const wl = `(select id from public.customer_waitlist where email='${cust + D}')`;
-  if (p.m === "active") extra.push(`insert into public.customer_memberships (waitlist_id,status,started_on,billing_day,next_billing_date,activated_by) values (${wl},'active','${startedOn}',${billingDay},'${nextBilling(billingDay, todayIso)}','seed');`);
+  if (p.m === "active") extra.push(`insert into public.customer_memberships (waitlist_id,status,started_on,billing_day,next_billing_date,activated_by) values (${wl},'active','${startedOn}',null,'${nextBilling(startedOn)}','seed');`);
   else if (p.m === "pending_payment") extra.push(`insert into public.customer_memberships (waitlist_id,status) values (${wl},'pending_payment');`);
   if (p.sch) extra.push(`insert into public.customer_schedules (waitlist_id,frequency,weekday,anchor_date,start_time,hours) values (${wl},'${p.sch[0]}',${p.sch[1]},'${p.sch[2]}','${p.sch[3]}',${p.sch[4]});`);
-  for (const [d, t, h, st, note] of p.reqs) extra.push(`insert into public.cleaning_requests (waitlist_id,requested_date,start_time,hours,status,notes) values (${wl},'${d}','${t}',${h},'${st}',${note ? q(note) : "null"});`);
+  const cust2 = customers.find(c => c[1] === cust);
+  const respFor = { confirmed: "accepted", completed: "accepted", requested: "pending", awaiting_payment: "pending" };
+  for (const [d, t, h, st, note, tasks, bedrooms, windows] of p.reqs) {
+    const reg = assignments[cust] ? assignments[cust][0] : null;
+    const cleanerSql = reg ? `(select id from public.cleaner_applications where email='${reg + D}')` : "null";
+    const resp = reg ? q(respFor[st] ?? "pending") : "null";
+    extra.push(`insert into public.cleaning_requests (waitlist_id,requested_date,start_time,hours,status,notes,cleaner_id,cleaner_response,street,house_number,house_number_addition,postcode,city,property_type,bedrooms,bathrooms,windows,tasks,has_pets,supplies_at_home,created_by) values (${wl},'${d}','${t}',${h},'${st}',${note ? q(note) : "null"},${cleanerSql},${resp},${q(cust2[3])},${q(cust2[4])},${cust2[5] ? q(cust2[5]) : "null"},${q(cust2[6])},${q(cust2[7])},'apartment',${bedrooms ?? 2},1,${windows ?? 0},'{${(tasks ?? ["kitchen", "bathrooms", "floors"]).join(",")}}',false,true,'customer');`);
+  }
 }
 
 let sql = readFileSync(new URL("./unseed.sql", import.meta.url), "utf8") + "\n";

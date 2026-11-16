@@ -37,9 +37,9 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
   const requests: AdminRequest[] = tab === "requests"
     ? (await pool.query(
         `select ${REQUEST_SELECT} ${REQUEST_JOINS}
-          where ${rstatus === "all" ? "true" : rstatus === "open" ? "r.status in ('requested','awaiting_payment','confirmed')" : "r.status = $1"}
+          where ${rstatus === "all" ? "true" : rstatus === "open" ? "r.status in ('requested','awaiting_payment','confirmed')" : rstatus === "cleaner_pending" ? "r.cleaner_response = 'pending' and r.status in ('requested','confirmed')" : rstatus === "cleaner_declined" ? "r.cleaner_response = 'declined' and r.status in ('requested','confirmed')" : rstatus === "no_cleaner" ? "r.cleaner_id is null and r.status in ('requested','awaiting_payment','confirmed')" : "r.status = $1"}
           order by ${rstatus === "open" ? "r.requested_date asc, r.start_time asc" : "r.requested_date desc, r.start_time desc"} limit 300`,
-        ["open", "all"].includes(rstatus) ? [] : [rstatus])).rows
+        ["open", "all", "cleaner_pending", "cleaner_declined", "no_cleaner"].includes(rstatus) ? [] : [rstatus])).rows
     : [];
   const apps: Application[] = tab === "applications"
     ? (await pool.query(
@@ -85,9 +85,9 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
       {tab === "requests" && (
         <>
           <div className="mb-4 flex flex-wrap gap-2 text-sm">
-            {["open", "awaiting_payment", "requested", "confirmed", "completed", "cancelled", "all"].map(s => (
+            {["open", "cleaner_pending", "cleaner_declined", "no_cleaner", "awaiting_payment", "requested", "confirmed", "completed", "cancelled", "all"].map(s => (
               <Link key={s} href={`/admin?tab=requests&rstatus=${s}`} className={`rounded-md px-3 py-1 ${rstatus === s ? "bg-primary text-ink font-semibold" : "bg-white border border-line"}`}>
-                {s === "open" ? "Open" : s === "all" ? "All" : requestLabel[s as keyof typeof requestLabel]}{!["open", "all"].includes(s) ? ` (${reqCounts[s] ?? 0})` : ""}
+                {s === "open" ? "Open" : s === "all" ? "All" : s === "cleaner_pending" ? "Waiting for cleaner" : s === "cleaner_declined" ? "Cleaner declined" : s === "no_cleaner" ? "No cleaner yet" : requestLabel[s as keyof typeof requestLabel]}{!["open", "all", "cleaner_pending", "cleaner_declined", "no_cleaner"].includes(s) ? ` (${reqCounts[s] ?? 0})` : ""}
               </Link>
             ))}
           </div>
@@ -115,6 +115,10 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
                 </div>
                 <p className="mt-2 text-sm"><a className="text-primary-dark underline" href={`mailto:${a.email}`}>{a.email}</a> · <a className="text-primary-dark underline" href={`tel:${a.phone}`}>{a.phone}</a></p>
                 {a.street && <p className="mt-2 text-sm"><b>Address:</b> {`${a.street} ${a.house_number ?? ""}${a.house_number_addition ? " " + a.house_number_addition : ""}`.trim()}, {[a.postcode, a.city].filter(Boolean).join(" ")}</p>}
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Link href={`/admin/cleaners/${a.id}/view`} className="rounded-full bg-ink-deep px-4 py-1.5 text-sm font-bold text-white hover:bg-primary-deep">View cleaner dashboard</Link>
+                  <a href={`tel:${a.phone}`} className="rounded-full border border-line px-4 py-1.5 text-sm font-semibold hover:border-primary">Call cleaner</a>
+                </div>
                 {a.availability && <p className="mt-2 text-sm"><b>Availability:</b> {a.availability}</p>}
                 {a.experience && <p className="mt-1 text-sm"><b>Experience:</b> {a.experience}</p>}
                 <form action={updateApplication} className="mt-4 grid gap-3 sm:grid-cols-[200px_1fr_auto] sm:items-start">

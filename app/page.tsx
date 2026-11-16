@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { BadgeCheck, CalendarCheck, CalendarDays, Coins, LifeBuoy, Repeat, ShieldCheck, UserCheck, Users, Video, FileCheck, Wallet, ClipboardList } from "lucide-react";
@@ -25,7 +26,7 @@ const why = [
 const steps: Step[] = [
   { t: "Create a free account", d: "Tell us your address and phone number. It costs nothing.", icon: ClipboardList },
   { t: "Set your regular schedule", d: "Pick the day and time that suit you in your calendar. Then request a cleaning whenever you need one.", icon: CalendarDays },
-  { t: "Make your first request", d: `You pay the ${price} membership with your first request. It then renews on the same day each month.`, icon: Wallet },
+  { t: "Make your first request", d: `You pay the ${price} membership with your first request. It then renews 30 days after each payment.`, icon: Wallet },
   { t: "We match you and call you", d: "We choose a regular cleaner and a backup near your home, and call you for a short orientation call.", icon: Users },
   { t: "Pay per hour", d: `Cleaning is ${hourlyRate} per hour. If your regular cleaner cannot make it, your backup steps in.`, icon: Coins },
 ];
@@ -49,8 +50,8 @@ export default function Home() {
         <Container>
           <div className="grid gap-6 md:grid-cols-2">
             {[
-              { img: "/images/journey-homeowner.jpg", pos: "object-[50%_30%]", alt: "A homeowner relaxing on her sofa in a clean, sunlit living room", tag: "For homeowners", title: "Find a regular cleaner", text: "Create a free account, set your regular cleaning day, and request a cleaning when you need one. We match you with a regular cleaner and a backup.", href: "/join", cta: "Create free account", variant: "primary" as const },
-              { img: "/images/journey-cleaner.jpg", pos: "object-[50%_6%]", alt: "A smiling cleaner carrying a cleaning caddy through a bright hallway", tag: "For cleaners", title: "Work as an independent cleaner", text: "Apply, meet us on video, and we introduce you to households near you in Amsterdam.", href: "/apply", cta: "Work as a cleaner", variant: "dark" as const },
+              { img: "/images/journey-homeowner.jpg", pos: "object-[50%_30%]", alt: "A homeowner relaxing on her sofa in a clean, sunlit living room", tag: "For homeowners", title: "Find a regular cleaner", text: "Create a free account, set your regular cleaning day, and request a cleaning when you need one. We match you with a regular cleaner and a backup.", href: "/join", cta: "Create free account", more: "/i-need-a-cleaner", moreLabel: "I need a cleaner: learn more", variant: "primary" as const },
+              { img: "/images/journey-cleaner.jpg", pos: "object-[50%_6%]", alt: "A smiling cleaner carrying a cleaning caddy through a bright hallway", tag: "For cleaners", title: "Work as an independent cleaner", text: "Apply, meet us on video, and we introduce you to households near you in Amsterdam.", href: "/apply", cta: "Work as a cleaner", more: "/apply#how-it-works", moreLabel: "How joining works", variant: "dark" as const },
             ].map((j, i) => (
               <Reveal key={j.href} delay={i * 120}>
                 <article className="group overflow-hidden rounded-[2rem] border border-line bg-white shadow-[0_30px_60px_-30px_rgba(4,38,44,.45)] transition duration-500 hover:-translate-y-1.5">
@@ -61,7 +62,7 @@ export default function Home() {
                   <div className="p-7 sm:p-8">
                     <h2 className="text-3xl font-medium">{j.title}</h2>
                     <p className="mb-6 mt-3 leading-relaxed text-muted">{j.text}</p>
-                    <ButtonLink href={j.href} variant={j.variant}>{j.cta}</ButtonLink>
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-3"><ButtonLink href={j.href} variant={j.variant}>{j.cta}</ButtonLink><Link href={j.more} className="font-semibold text-primary-dark underline-offset-4 hover:underline">{j.moreLabel}</Link></div>
                   </div>
                 </article>
               </Reveal>
@@ -85,11 +86,11 @@ export default function Home() {
       </Section>
 
       <Section id="pricing" tone="dark">
-        <SectionTitle dark eyebrow="Pricing" title="Free to join. Two simple prices after that." intro="Creating an account costs nothing. You pay the membership with your first cleaning request, and it renews on the same day each month. Then you pay only for the hours your cleaner works." />
+        <SectionTitle dark eyebrow="Pricing" title="Free to join. Two simple prices after that." intro="Creating an account costs nothing. You pay the membership with your first cleaning request, and it renews 30 days after each payment. Then you pay only for the hours your cleaner works." />
         <div className="grid gap-6 md:grid-cols-3">
           {[
             { big: "Free", unit: "to sign up", title: "Your account", items: ["Create your account at no cost", "Set your regular cleaning schedule", "No payment until you make a cleaning request"] },
-            { big: price, unit: "per month", title: "Membership", items: ["Paid with your first cleaning request", "Then renewed on the same day each month", "A regular cleaner, a backup and breakage cover"] },
+            { big: price, unit: "per 30 days", title: "Membership", items: ["Paid with your first cleaning request", "Then renewed every 30 days", "A regular cleaner, a backup and breakage cover"] },
             { big: hourlyRate, unit: "per hour", title: "Cleaning", items: ["Pay only for the hours your cleaner works", "Your regular cleaner, every visit", "No hidden fees"] },
           ].map((p, i) => (
             <Reveal key={p.title} delay={i * 110}>

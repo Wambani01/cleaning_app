@@ -15,7 +15,7 @@ export function SiteFooter() {
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/70">Regular cleaners for homes in Amsterdam, matched by us. A backup cleaner and breakage cover come with every membership.</p>
           </div>
           <nav aria-label="For homeowners" className={col}><p className="mb-1 font-semibold text-mint">For homeowners</p>
-            <Link className={link} href="/join">Create free account</Link><Link className={link} href="/#how-it-works">How it works</Link><Link className={link} href="/#pricing">Pricing</Link><Link className={link} href="/join#faq">FAQ</Link><Link className={link} href="/customer/sign-in">Customer sign in</Link></nav>
+            <Link className={link} href="/i-need-a-cleaner">I need a cleaner</Link><Link className={link} href="/join">Create free account</Link><Link className={link} href="/i-need-a-cleaner#how-it-works">How it works</Link><Link className={link} href="/i-need-a-cleaner#pricing">Pricing</Link><Link className={link} href="/i-need-a-cleaner#faq">FAQ</Link><Link className={link} href="/customer/sign-in">Customer sign in</Link></nav>
           <nav aria-label="For cleaners" className={col}><p className="mb-1 font-semibold text-mint">For cleaners</p>
             <Link className={link} href="/apply">Work as a cleaner</Link><Link className={link} href="/apply#how-it-works">How joining works</Link><Link className={link} href="/apply#faq">Cleaner FAQ</Link><Link className={link} href="/cleaner/sign-in">Cleaner sign in</Link></nav>
           <nav aria-label="Company" className={col}><p className="mb-1 font-semibold text-mint">Company</p>

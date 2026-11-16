@@ -45,7 +45,7 @@ export default function Contact() {
         </div>
         <Reveal className="mt-10 flex items-center gap-3 rounded-3xl border border-line bg-white p-6 shadow-card">
           <HelpCircle size={26} className="flex-none text-primary-dark" aria-hidden="true" />
-          <p className="text-muted">Looking for a quick answer? The <Link className="font-semibold text-primary-dark underline-offset-4 hover:underline" href="/join#faq">homeowner FAQ</Link> and <Link className="font-semibold text-primary-dark underline-offset-4 hover:underline" href="/apply#faq">cleaner FAQ</Link> cover the most common questions.</p>
+          <p className="text-muted">Looking for a quick answer? The <Link className="font-semibold text-primary-dark underline-offset-4 hover:underline" href="/i-need-a-cleaner#faq">homeowner FAQ</Link> and <Link className="font-semibold text-primary-dark underline-offset-4 hover:underline" href="/apply#faq">cleaner FAQ</Link> cover the most common questions.</p>
         </Reveal>
       </Section>
     </main>

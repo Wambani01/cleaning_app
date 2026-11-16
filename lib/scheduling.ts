@@ -1,4 +1,4 @@
-// Pure date and rule helpers for cleaning requests, regular schedules and the monthly membership date.
+// Pure date and rule helpers for cleaning requests, regular schedules and the membership renewal date (30 days after each payment).
 // Dates are plain "YYYY-MM-DD" strings (calendar days, no time zone) and are computed in UTC so they never shift.
 // No imports from the server, so the browser can use these for instant form checks.
 
@@ -42,20 +42,11 @@ export function todayAmsterdam(now: Date = new Date()): ISODate {
   return parts; // en-CA gives YYYY-MM-DD
 }
 
-/**
- * The next membership payment date: the same day of the month as the first payment ("billing day").
- * In a shorter month the last day is used (a payment on the 31st is taken on the 28th/29th/30th in short months).
- * Returns the first such date strictly AFTER `after`.
- */
-export function nextBillingDate(billingDay: number, after: ISODate): ISODate {
-  let y = Number(after.slice(0, 4)), m = Number(after.slice(5, 7));
-  for (let i = 0; i < 14; i++) {
-    const candidate = `${y}-${pad(m)}-${pad(Math.min(billingDay, daysInMonth(y, m)))}`;
-    if (candidate > after) return candidate;
-    m += 1; if (m > 12) { m = 1; y += 1; }
-  }
-  throw new Error("Could not work out the next billing date");
-}
+/** Membership renews this many days after the day of payment. Kept simple on purpose (no day-of-month rules). */
+export const BILLING_PERIOD_DAYS = 30;
+
+/** The next membership payment is due 30 days after the day the last payment was received. */
+export const nextBillingDate = (paidOn: ISODate): ISODate => addDays(paidOn, BILLING_PERIOD_DAYS);
 
 /** First date on or after `from` that falls on `weekday` (1-7). */
 export function firstOnOrAfter(from: ISODate, weekday: number): ISODate {
