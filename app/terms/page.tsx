@@ -1,5 +1,5 @@
 import { Page, company, hourlyRate, price } from "@/components/ui";
-export const metadata = { title: "Terms and cancellation" };
+export const metadata = { title: "Terms and cancellation", alternates: { canonical: "/terms" } };
 export default function Terms() {
   return (
     <Page title="Terms and cancellation" draft>

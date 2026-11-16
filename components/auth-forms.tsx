@@ -25,6 +25,7 @@ export function SignInForm({ portal }: { portal: Portal }) {
     e.preventDefault(); setError(""); setPending(true);
     const f = new FormData(e.currentTarget);
     const { data, error } = await authClient.signIn.email({ email: String(f.get("email")), password: String(f.get("password")) });
+    if (error?.status === 429) { setPending(false); return setError("Too many attempts. Please wait a few seconds and try again."); }
     if (error || !data) { setPending(false); return setError("Wrong email or password."); }
     if (data.user.role !== cfg.role) {
       // Right password, wrong portal. Sign out again and point them to the right place.
@@ -67,6 +68,7 @@ export function SignUpForm({ portal, withAddress = false }: { portal: Exclude<Po
     }
     const { error } = await authClient.signUp.email({ name: String(f.get("name")).trim(), email: String(f.get("email")), password, role: cfg.role });
     setPending(false);
+    if (error?.status === 429) return setError("Too many attempts. Please wait a few seconds and try again.");
     if (error) return setError(error.message || "Could not create your account. Try a different email.");
     // The account exists and the browser is now signed in. For customers, join the waiting list for a cleaner.
     if (withAddress && cfg.role === "customer") { try { await registerCustomerInterest(details); } catch { /* the account is created either way */ } }

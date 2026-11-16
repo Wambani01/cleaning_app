@@ -1,5 +1,5 @@
 import { Page, company } from "@/components/ui";
-export const metadata = { title: "Privacy policy" };
+export const metadata = { title: "Privacy policy", alternates: { canonical: "/privacy" } };
 export default function Privacy() {
   return (
     <Page title="Privacy policy" draft>
