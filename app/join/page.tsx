@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { BadgeCheck, Check, ClipboardList, Clock, Coins, PhoneCall, Repeat, ShieldCheck, Sparkles, Users, X, Home as HomeIcon, UserCheck } from "lucide-react";
+import { BadgeCheck, CalendarDays, Check, ClipboardList, Clock, Coins, Repeat, ShieldCheck, Users, Wallet, X, Home as HomeIcon, UserCheck } from "lucide-react";
 import { ButtonLink, Card, hourlyRate, price } from "@/components/ui";
 import { Hero } from "@/components/hero";
 import { Reveal } from "@/components/motion";
@@ -10,27 +10,27 @@ import { homeownerFaqs } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Find a regular cleaner in Amsterdam",
-  description: `Skip the searching. Create an account and we match your home with a vetted regular cleaner and a backup. ${price} a month plus ${hourlyRate} per hour of cleaning.`,
+  description: `Create a free account, set your regular cleaning day and request a cleaning when you need one. We match you with a vetted regular cleaner and a backup. ${price} membership with your first request, then ${hourlyRate} per hour.`,
   alternates: { canonical: "/join" },
   openGraph: { images: [{ url: "/images/join-hero.jpg", width: 1920, height: 1080, alt: "A cleaner wiping a sunlit kitchen worktop in an Amsterdam home" }] },
 };
 
 const steps: Step[] = [
-  { t: "Create your account", d: "Tell us your address and phone number. You are not charged when you sign up.", icon: ClipboardList },
-  { t: "We find your match", d: "We look at approved cleaners near your home and choose a regular cleaner and a backup.", icon: Users },
-  { t: "Orientation call", d: "We call you to go through your needs, your home and what to expect before the first visit.", icon: PhoneCall },
-  { t: "Your cleaner takes over", d: "Your regular cleaner looks after your home. If they cannot make it, your backup steps in.", icon: Sparkles },
-  { t: "Pay per hour", d: `Pay ${hourlyRate} per hour of cleaning, plus the ${price} monthly membership.`, icon: Coins },
+  { t: "Create a free account", d: "Tell us your address and phone number. It costs nothing.", icon: ClipboardList },
+  { t: "Set your regular schedule", d: "Pick the day and time that suit you in your calendar. Then request a cleaning whenever you need one.", icon: CalendarDays },
+  { t: "Make your first request", d: `You pay the ${price} membership with your first request. It then renews on the same day each month.`, icon: Wallet },
+  { t: "We match you and call you", d: "We choose a regular cleaner and a backup near your home, and call you for a short orientation call.", icon: Users },
+  { t: "Pay per hour", d: `Cleaning is ${hourlyRate} per hour. If your regular cleaner cannot make it, your backup steps in.`, icon: Coins },
 ];
 
 const before = ["Scrolling through ads and profiles", "Not knowing who is turning up at your door", "Starting again when your cleaner cancels", "Wondering who pays if something breaks"];
 const after = ["We do the matching for you", "Cleaners are interviewed and document-checked", "A backup cleaner is part of your membership", "Breakage cover is included"];
 
 const why = [
-  { icon: Clock, t: "It saves you the search", d: "No comparing dozens of strangers. You tell us what you need and where you live, and we come back with a match." },
+  { icon: Clock, t: "You stay in control", d: "Set your regular cleaning day in a calendar, then request a cleaning whenever you need your cleaner. No commitment to a fixed schedule." },
   { icon: Repeat, t: "You are never left without", d: "Your regular cleaner has a backup lined up for the days they cannot come." },
   { icon: ShieldCheck, t: "Peace of mind at home", d: "Cleaners are checked before they start, and accidental breakage during a visit is covered." },
-  { icon: Coins, t: "Prices you can plan for", d: `${price} a month plus ${hourlyRate} per hour. You see the numbers before you sign up.` },
+  { icon: Coins, t: "Free to start, clear after that", d: `Signing up is free. The ${price} membership is paid with your first request and renews on the same day each month, plus ${hourlyRate} per hour of cleaning.` },
 ];
 
 export default function FindACleaner() {
@@ -40,10 +40,10 @@ export default function FindACleaner() {
         image="/images/join-hero.jpg" position="object-[72%_center] md:object-center"
         eyebrow="For homeowners"
         title={<>Find a regular cleaner <em className="font-normal italic text-mint">you can rely on.</em></>}
-        text={`Skip the searching. Tell us where you live and we match your home with a vetted regular cleaner and a backup, for ${price} a month plus ${hourlyRate} per hour of cleaning.`}
-        footer={<p className="text-sm text-white/80">You are not charged when you create an account.</p>}
+        text={`Skip the searching. Create a free account, set your regular cleaning day and request a cleaning when you need one. We match your home with a vetted regular cleaner and a backup. You pay the ${price} membership only with your first request, then ${hourlyRate} per hour.`}
+        footer={<p className="text-sm text-white/80">Free to sign up. No payment until your first cleaning request.</p>}
       >
-        <ButtonLink href="#start">I need regular cleaning</ButtonLink>
+        <ButtonLink href="#start">Create free account</ButtonLink>
         <ButtonLink href="#how-it-works" variant="ghost" arrow={false}>See how it works</ButtonLink>
       </Hero>
 
@@ -118,18 +118,18 @@ export default function FindACleaner() {
         <div className="grid items-start gap-12 lg:grid-cols-[1fr_1.1fr]">
           <Reveal>
             <p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-mint">Get started</p>
-            <h2 className="text-4xl font-medium leading-[1.1] sm:text-5xl">Let us find your regular cleaner.</h2>
-            <p className="mb-8 mt-5 max-w-md text-lg leading-relaxed text-white/80">Create your account and tell us where you need cleaning. We take it from there, and call you for a short orientation call.</p>
+            <h2 className="text-4xl font-medium leading-[1.1] sm:text-5xl">Create your free account and find your regular cleaner.</h2>
+            <p className="mb-8 mt-5 max-w-md text-lg leading-relaxed text-white/80">Tell us where you need cleaning and set your regular day. When you make your first request we match you with a regular cleaner and a backup, and call you for a short orientation call.</p>
             <div className="max-w-md rounded-3xl border border-white/15 bg-white/[0.07] p-6 backdrop-blur-sm">
-              <p className="font-heading text-5xl font-medium">{price}<span className="ml-2 font-sans text-base font-normal text-white/70">per month</span></p>
-              <p className="mb-5 mt-1 text-lg">+ {hourlyRate} per hour of cleaning</p>
-              <Checklist dark items={[`A regular cleaner at ${hourlyRate} per hour`, "A backup cleaner if yours is unavailable", "Breakage cover for accidental damage"]} />
-              <p className="mt-5 border-t border-white/15 pt-4 text-sm text-white/75">You are not charged today. Online payment is coming soon.</p>
+              <p className="font-heading text-5xl font-medium">Free<span className="ml-2 font-sans text-base font-normal text-white/70">to sign up</span></p>
+              <p className="mb-5 mt-1 text-white/80">Then, with your first cleaning request:</p>
+              <Checklist dark items={[`${price} per month membership, renewing on the same day each month`, `${hourlyRate} per hour of cleaning`, "A backup cleaner if yours is unavailable", "Breakage cover for accidental damage"]} />
+              <p className="mt-5 border-t border-white/15 pt-4 text-sm text-white/75">Online payment is coming soon. Until then we contact you with payment details after your first request.</p>
             </div>
           </Reveal>
           <Reveal delay={120}>
             <div className="rounded-[2rem] bg-white p-7 text-ink shadow-[0_40px_80px_-30px_rgba(0,0,0,.6)] sm:p-10">
-              <h2 className="mb-1 text-2xl font-medium">Create your customer account</h2>
+              <h2 className="mb-1 text-2xl font-medium">Create your free account</h2>
               <p className="mb-6 text-sm text-muted">Takes about two minutes.</p>
               <Suspense><SignUpForm portal="customer" withAddress /></Suspense>
             </div>

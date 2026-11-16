@@ -4,13 +4,15 @@ import type { Faq } from "@/components/sections";
 // Everything below describes what the business actually offers today. Do not add claims that the product cannot back up.
 
 export const homeownerFaqs: Faq[] = [
-  { q: "What does it cost?", a: `${price} per month for the membership, plus ${hourlyRate} per hour for each hour of cleaning. You will not be charged when you create an account. Online payment is coming soon.` },
-  { q: "How do I get matched with a cleaner?", a: "You create an account and tell us your address and phone number. We then look at our approved cleaners near your home and match you with a regular cleaner and a backup. We call you for a short orientation call before the first visit." },
+  { q: "What does it cost?", a: `Creating an account is free. You pay the ${price} membership when you make your first cleaning request, and it then renews on the same day each month. Cleaning is ${hourlyRate} per hour. Online payment is coming soon, so until then we contact you with the payment details after your first request.` },
+  { q: "When am I charged?", a: "Not when you sign up. Your first payment is the membership fee, after you make your first cleaning request. After that the fee is charged on the same day each month, to keep the service going." },
+  { q: "How do I get matched with a cleaner?", a: "Create a free account with your address and phone number, and set your regular cleaning day in the calendar. Once you have made your first cleaning request, we look at our approved cleaners near your home and match you with a regular cleaner and a backup. We call you for a short orientation call before the first visit." },
+  { q: "How do I ask for a cleaning?", a: "Set your regular day and time in your calendar. Then request a cleaning whenever you need your cleaner, on one of your regular days or any other date, up to six months ahead." },
   { q: "Can I choose my own cleaner?", a: "We do the matching for you, so you do not have to compare profiles. On the orientation call you can tell us what matters to you, and we take that into account." },
   { q: "What if my regular cleaner is ill or on holiday?", a: "Your backup cleaner steps in. If neither is available we will tell you as early as possible and arrange a solution." },
   { q: "What does the breakage insurance cover?", a: "Accidental damage to your belongings during a visit. The full conditions will be published before launch." },
   { q: "How are cleaners checked?", a: "Every cleaner applies, has a video interview with us and submits identity documents before they are approved." },
-  { q: "Can I cancel?", a: "Yes. You can cancel your membership online. The cancellation terms will be shown clearly before you sign up." },
+  { q: "Can I cancel?", a: "Yes. Tell us and we will end your membership. The cancellation terms will be shown clearly before your first payment." },
   { q: "Which areas do you cover?", a: "Amsterdam. Enter your postcode when you create your account and we will confirm." },
 ];
 

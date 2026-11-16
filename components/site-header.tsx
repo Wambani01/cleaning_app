@@ -37,7 +37,7 @@ export function SiteHeader({ name }: { name: string }) {
           ))}
           <Link href="/sign-in" className="rounded-full px-4 py-2 text-sm font-medium transition hover:bg-sand">Sign in</Link>
           <Link href="/join" className="group ml-2 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-ink-deep shadow-[0_8px_20px_-8px_rgba(16,177,199,.9)] transition hover:bg-mint">
-            I need regular cleaning <ArrowRight size={16} className="transition group-hover:translate-x-0.5" aria-hidden="true" />
+            Create free account <ArrowRight size={16} className="transition group-hover:translate-x-0.5" aria-hidden="true" />
           </Link>
         </nav>
 
@@ -51,7 +51,7 @@ export function SiteHeader({ name }: { name: string }) {
           <div className="mx-auto grid max-w-6xl gap-1">
             {links.map(l => <Link key={l.href} href={l.href} className="rounded-xl px-3 py-3 text-lg font-medium hover:bg-sand">{l.label}</Link>)}
             <Link href="/sign-in" className="rounded-xl px-3 py-3 text-lg font-medium hover:bg-sand">Sign in</Link>
-            <Link href="/join" className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 font-bold text-ink-deep">I need regular cleaning <ArrowRight size={18} aria-hidden="true" /></Link>
+            <Link href="/join" className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 font-bold text-ink-deep">Create free account <ArrowRight size={18} aria-hidden="true" /></Link>
           </div>
         </nav>
       )}

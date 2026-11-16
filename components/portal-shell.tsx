@@ -28,8 +28,8 @@ export function SignUpPage({ portal }: { portal: Exclude<Portal, "admin"> }) {
   return (
     <main className="py-14"><Container>
       <p className="mb-1 text-sm font-bold uppercase tracking-wide text-primary-dark">{cfg.label} portal</p>
-      <h1 className="mb-6 text-3xl font-bold">Create your {cfg.label.toLowerCase()} account</h1>
-      <SignUpForm portal={portal} />
+      <h1 className="mb-6 text-3xl font-bold">Create your {portal === "customer" ? "free " : ""}{cfg.label.toLowerCase()} account</h1>
+      <SignUpForm portal={portal} withAddress={portal === "customer"} />
     </Container></main>
   );
 }

@@ -6,10 +6,12 @@ export default function Terms() {
       <h2>The service</h2>
       <p>{company.legalName} gives members access to vetted regular cleaners, a backup cleaner when the regular cleaner is unavailable, and breakage cover.</p>
       <h2>Prices</h2>
-      <ul><li>Membership: {price} per month.</li><li>Cleaning: {hourlyRate} per hour, charged for the hours booked.</li></ul>
+      <ul><li>Creating an account is free.</li><li>Membership: {price} per month. The first payment is due when you make your first cleaning request.</li><li>Cleaning: {hourlyRate} per hour, charged for the hours booked.</li></ul>
       <p>Prices include VAT where applicable. We will show the total before you confirm.</p>
       <h2>Contract term and cancellation</h2>
-      <p>The membership renews monthly. You can cancel online at any time and it ends at the end of the paid month. [Final term and notice period to be confirmed.]</p>
+      <p>The membership starts with your first payment and renews monthly. The fee is due on the same day of each month. In a month without that day, it is due on the last day of the month. You can ask us to cancel your membership, and it ends at the end of the paid month. [Final term and notice period to be confirmed.]</p>
+      <h2>Cleaning requests</h2>
+      <p>You can request a cleaning for any date from tomorrow, up to six months ahead. A request is confirmed by us once your first payment has been received. You can cancel an open request. [Cancellation deadline for a confirmed cleaning to be confirmed.]</p>
       <h2>Backup cleaner</h2>
       <p>If your regular cleaner cannot attend we will offer your backup cleaner. If no cleaner is available we will tell you as early as possible and reschedule or refund the affected visit.</p>
       <h2>Breakage cover</h2>

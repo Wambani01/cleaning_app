@@ -101,7 +101,7 @@ export function SignUpForm({ portal, withAddress = false }: { portal: Exclude<Po
         <span>I agree to the <Link href="/privacy" className="text-primary-dark underline">privacy policy</Link>.</span>
       </label>
       {error && <p role="alert" className={errCls}>{error}</p>}
-      <button disabled={pending} className={btn}>{pending ? "Creating account…" : "Create account"}</button>
+      <button disabled={pending} className={btn}>{pending ? "Creating account…" : cfg.role === "customer" ? "Create free account" : "Create account"}</button>
       <p className="text-sm text-muted">Already have an account? <Link className="text-primary-dark underline" href={cfg.signIn}>Sign in</Link></p>
     </form>
   );

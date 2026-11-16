@@ -10,6 +10,7 @@ export default function Privacy() {
       <ul>
         <li>Customers: name, email, phone, address, booking history, and payment status (payments are processed by our payment provider, we do not store card numbers).</li>
         <li>Cleaners: name, contact details, area, experience, interview notes, and identity and work documents.</li>
+        <li>Cleaning requests: the dates, times and notes you give us, and your regular cleaning schedule.</li>
         <li>Claims: descriptions and photos you send about damage.</li>
       </ul>
       <h2>Why we use it</h2>

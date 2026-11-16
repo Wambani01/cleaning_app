@@ -7,6 +7,9 @@ import { requirePortal } from "@/lib/admin";
 import { pool } from "@/lib/db";
 import { candidatesFor, closeness } from "@/lib/matching";
 import { assignCleaner, removeAssignment } from "../../actions";
+import { AdminRequestCard, MembershipPanel, REQUEST_JOINS, REQUEST_SELECT, type AdminRequest } from "@/components/admin-requests";
+import { loadCustomerData } from "@/lib/customer";
+import { FREQUENCIES, WEEKDAYS, formatHours } from "@/lib/scheduling";
 
 export const metadata = { title: "Assign a cleaner", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -29,6 +32,8 @@ export default async function AssignPage({ params, searchParams }: { params: Pro
        from public.customer_assignments a join public.cleaner_applications r on r.id = a.regular_cleaner_id left join public.cleaner_applications b on b.id = a.backup_cleaner_id
       where a.waitlist_id = $1`, [id])).rows[0];
   const candidates = await candidatesFor(customer.postcode);
+  const { membership, schedule } = await loadCustomerData(id);
+  const requests: AdminRequest[] = (await pool.query(`select ${REQUEST_SELECT} ${REQUEST_JOINS} where r.waitlist_id = $1 order by r.requested_date desc, r.start_time desc`, [id])).rows;
 
   return (
     <main className="py-10"><Container>
@@ -61,6 +66,15 @@ export default async function AssignPage({ params, searchParams }: { params: Pro
           )}
         </Card>
       </div>
+
+      <div className="mb-8 grid gap-5 md:grid-cols-2">
+        <MembershipPanel customerId={id} status={membership.status} startedOn={membership.started_on} nextBilling={membership.next_billing_date} returnTo={`/admin/customers/${id}`} />
+        <Card hover={false}><h2 className="mb-2 text-lg font-bold">Regular schedule</h2>
+          {schedule ? <p className="text-sm">{FREQUENCIES[schedule.frequency]} on <b>{WEEKDAYS[schedule.weekday - 1]}s</b> at <b>{schedule.start_time}</b>, {formatHours(schedule.hours)}.</p> : <p className="text-sm text-muted">No regular schedule set.</p>}
+        </Card>
+      </div>
+      <h2 className="mb-3 text-2xl font-bold">Cleaning requests ({requests.length})</h2>
+      {requests.length === 0 ? <p className="mb-8 text-muted">This customer has not made a cleaning request yet.</p> : <div className="mb-10 grid gap-4">{requests.map(r => <AdminRequestCard key={r.id} r={r} returnTo={`/admin/customers/${id}`} showCustomer={false} />)}</div>}
 
       <h2 className="mb-3 text-2xl font-bold">Approved cleaners ({candidates.length})</h2>
       {candidates.length === 0 && <p className="text-muted">No approved cleaners yet. Approve an application first (set its status to Approved in <Link className="text-primary-dark underline" href="/admin">Cleaner applications</Link>).</p>}

@@ -38,7 +38,7 @@ export default function Contact() {
           </Reveal>
           <Reveal delay={120}>
             <div className="grid h-full gap-6">
-              <Card icon={HomeIcon}><h3 className="mb-1 text-xl font-medium">Homeowners</h3><p className="mb-3 text-sm leading-relaxed text-muted">Want regular cleaning, or have a question about your membership?</p><Link href="/join" className="font-semibold text-primary-dark underline-offset-4 hover:underline">I need regular cleaning</Link></Card>
+              <Card icon={HomeIcon}><h3 className="mb-1 text-xl font-medium">Homeowners</h3><p className="mb-3 text-sm leading-relaxed text-muted">Want regular cleaning, or have a question about your membership?</p><Link href="/join" className="font-semibold text-primary-dark underline-offset-4 hover:underline">Create free account</Link></Card>
               <Card icon={Sparkles}><h3 className="mb-1 text-xl font-medium">Cleaners</h3><p className="mb-3 text-sm leading-relaxed text-muted">Want to work with us, or checking on your application?</p><Link href="/apply" className="font-semibold text-primary-dark underline-offset-4 hover:underline">Work as a cleaner</Link></Card>
             </div>
           </Reveal>

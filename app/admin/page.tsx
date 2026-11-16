@@ -7,6 +7,8 @@ import { WrongPortal } from "@/components/wrong-portal";
 import { pool } from "@/lib/db";
 import { STATUSES } from "@/lib/statuses";
 import { updateApplication } from "./actions";
+import { AdminRequestCard, REQUEST_JOINS, REQUEST_SELECT, memTone, type AdminRequest } from "@/components/admin-requests";
+import { membershipLabel, requestLabel, type MembershipStatus } from "@/lib/customer";
 
 export const metadata = { title: "Admin", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -16,20 +18,29 @@ type Application = {
   availability: string | null; experience: string | null; status: string; notes: string | null;
   street: string | null; house_number: string | null; house_number_addition: string | null; postcode: string | null; city: string | null;
 };
-type Waiter = { id: string; created_at: Date; name: string; email: string; phone: string | null; street: string | null; house_number: string | null; house_number_addition: string | null; postcode: string | null; city: string | null; regular_name: string | null; backup_name: string | null };
+type Waiter = { id: string; created_at: Date; name: string; email: string; phone: string | null; street: string | null; house_number: string | null; house_number_addition: string | null; postcode: string | null; city: string | null; regular_name: string | null; backup_name: string | null; membership_status: MembershipStatus | null };
 
 const label = (s: string) => s.replace(/_/g, " ").replace(/^./, c => c.toUpperCase());
 const fmt = (d: Date) => new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Amsterdam" }).format(d);
 
-export default async function Admin({ searchParams }: { searchParams: Promise<{ tab?: string; status?: string }> }) {
+export default async function Admin({ searchParams }: { searchParams: Promise<{ tab?: string; status?: string; rstatus?: string; msg?: string }> }) {
   const { session, wrongRole } = await requirePortal("admin");
   if (wrongRole) return <WrongPortal role={session.user.role} wanted="admin" />;
 
-  const { tab = "applications", status = "all" } = await searchParams;
+  const { tab = "applications", status = "all", rstatus = "open", msg } = await searchParams;
   const counts = Object.fromEntries((await pool.query("select status, count(*)::int as n from public.cleaner_applications group by status")).rows.map(r => [r.status, r.n]));
   const total = Object.values(counts).reduce((a: number, b) => a + (b as number), 0);
   const waitCount = (await pool.query("select count(*)::int as n from public.customer_waitlist")).rows[0].n as number;
 
+  const reqCounts = Object.fromEntries((await pool.query("select status, count(*)::int as n from public.cleaning_requests group by status")).rows.map(r => [r.status, r.n]));
+  const openRequests = (reqCounts["requested"] ?? 0) + (reqCounts["awaiting_payment"] ?? 0) + (reqCounts["confirmed"] ?? 0);
+  const requests: AdminRequest[] = tab === "requests"
+    ? (await pool.query(
+        `select ${REQUEST_SELECT} ${REQUEST_JOINS}
+          where ${rstatus === "all" ? "true" : rstatus === "open" ? "r.status in ('requested','awaiting_payment','confirmed')" : "r.status = $1"}
+          order by ${rstatus === "open" ? "r.requested_date asc, r.start_time asc" : "r.requested_date desc, r.start_time desc"} limit 300`,
+        ["open", "all"].includes(rstatus) ? [] : [rstatus])).rows
+    : [];
   const apps: Application[] = tab === "applications"
     ? (await pool.query(
         status !== "all" && (STATUSES as readonly string[]).includes(status)
@@ -38,8 +49,9 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
     : [];
   const waiters: Waiter[] = tab === "waitlist"
     ? (await pool.query(`select w.id, w.created_at, w.name, w.email, w.phone, w.street, w.house_number, w.house_number_addition, w.postcode, w.city,
-              r.full_name as regular_name, b.full_name as backup_name
+              r.full_name as regular_name, b.full_name as backup_name, m.status as membership_status
          from public.customer_waitlist w
+         left join public.customer_memberships m on m.waitlist_id = w.id
          left join public.customer_assignments a on a.waitlist_id = w.id
          left join public.cleaner_applications r on r.id = a.regular_cleaner_id
          left join public.cleaner_applications b on b.id = a.backup_cleaner_id
@@ -55,16 +67,34 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         <div className="flex items-center gap-3"><span className="text-sm text-muted">{session.user.email}</span><SignOutButton to="/admin/sign-in" /></div>
       </div>
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card hover={false}><p className="text-sm text-muted">Applications</p><p className="text-3xl font-bold">{total}</p></Card>
         <Card hover={false}><p className="text-sm text-muted">New, not yet contacted</p><p className="text-3xl font-bold">{counts["new"] ?? 0}</p></Card>
-        <Card hover={false}><p className="text-sm text-muted">Customer waitlist</p><p className="text-3xl font-bold">{waitCount}</p></Card>
+        <Card hover={false}><p className="text-sm text-muted">Customers</p><p className="text-3xl font-bold">{waitCount}</p></Card>
+        <Card hover={false}><p className="text-sm text-muted">Open cleaning requests</p><p className="text-3xl font-bold">{openRequests}</p></Card>
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2">
         <Link href="/admin?tab=applications" className={tabCls(tab === "applications")}>Cleaner applications</Link>
-        <Link href="/admin?tab=waitlist" className={tabCls(tab === "waitlist")}>Customer waitlist</Link>
+        <Link href="/admin?tab=requests" className={tabCls(tab === "requests")}>Cleaning requests ({openRequests})</Link>
+        <Link href="/admin?tab=waitlist" className={tabCls(tab === "waitlist")}>Customers</Link>
       </div>
+
+      {msg && <p role="status" className="mb-4 rounded-2xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm">{msg}</p>}
+
+      {tab === "requests" && (
+        <>
+          <div className="mb-4 flex flex-wrap gap-2 text-sm">
+            {["open", "awaiting_payment", "requested", "confirmed", "completed", "cancelled", "all"].map(s => (
+              <Link key={s} href={`/admin?tab=requests&rstatus=${s}`} className={`rounded-md px-3 py-1 ${rstatus === s ? "bg-primary text-ink font-semibold" : "bg-white border border-line"}`}>
+                {s === "open" ? "Open" : s === "all" ? "All" : requestLabel[s as keyof typeof requestLabel]}{!["open", "all"].includes(s) ? ` (${reqCounts[s] ?? 0})` : ""}
+              </Link>
+            ))}
+          </div>
+          {requests.length === 0 && <p className="text-muted">No cleaning requests here yet.</p>}
+          <div className="grid gap-4">{requests.map(r => <AdminRequestCard key={r.id} r={r} returnTo={`/admin?tab=requests&rstatus=${rstatus}`} />)}</div>
+        </>
+      )}
 
       {tab === "applications" && (
         <>
@@ -104,13 +134,14 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
       {tab === "waitlist" && (
         <div className="overflow-x-auto rounded-2xl border border-line bg-white">
           <table className="w-full text-left text-sm">
-            <thead className="bg-surface text-muted"><tr><th className="p-3">Date</th><th className="p-3">Name</th><th className="p-3">Email</th><th className="p-3">Phone</th><th className="p-3">Address</th><th className="p-3">Cleaner</th></tr></thead>
+            <thead className="bg-surface text-muted"><tr><th className="p-3">Date</th><th className="p-3">Name</th><th className="p-3">Email</th><th className="p-3">Phone</th><th className="p-3">Address</th><th className="p-3">Membership</th><th className="p-3">Cleaner</th></tr></thead>
             <tbody>
-              {waiters.length === 0 && <tr><td className="p-3 text-muted" colSpan={6}>Nobody on the waitlist yet.</td></tr>}
+              {waiters.length === 0 && <tr><td className="p-3 text-muted" colSpan={7}>Nobody on the waitlist yet.</td></tr>}
               {waiters.map(w => (
                 <tr key={w.id} className="border-t border-line"><td className="p-3 whitespace-nowrap">{fmt(w.created_at)}</td><td className="p-3">{w.name}</td>
                   <td className="p-3"><a className="text-primary-dark underline" href={`mailto:${w.email}`}>{w.email}</a></td><td className="p-3 whitespace-nowrap">{w.phone ? <a className="text-primary-dark underline" href={`tel:${w.phone}`}>{w.phone}</a> : ""}</td>
                   <td className="p-3">{[w.street && `${w.street} ${w.house_number ?? ""}${w.house_number_addition ? " " + w.house_number_addition : ""}`.trim(), [w.postcode, w.city].filter(Boolean).join(" ")].filter(Boolean).join(", ")}</td>
+                  <td className="p-3 whitespace-nowrap"><span className={`rounded-full px-2.5 py-1 text-xs font-bold ${memTone[w.membership_status ?? "free"]}`}>{membershipLabel[w.membership_status ?? "free"]}</span></td>
                   <td className="p-3 whitespace-nowrap">
                     {w.regular_name ? <span className="block">{w.regular_name}{w.backup_name ? <span className="text-muted"> + {w.backup_name}</span> : <span className="text-amber-700"> (no backup)</span>}</span> : <span className="block text-amber-700">Not assigned</span>}
                     <Link className="font-semibold text-primary-dark underline" href={`/admin/customers/${w.id}`}>{w.regular_name ? "Change" : "Assign a cleaner"}</Link>

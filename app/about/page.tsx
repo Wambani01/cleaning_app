@@ -35,7 +35,7 @@ export default function About() {
           <SectionTitle eyebrow="What we do" title="A platform that brings two sides together." />
           <Reveal delay={100}>
             <div className="grid gap-5 text-lg leading-relaxed text-muted">
-              <p>Amsta Clean helps households in Amsterdam find affordable, reliable regular cleaners. For a monthly membership you are matched with a vetted regular cleaner, a backup cleaner for the days your regular cleaner is unavailable, and breakage cover. You then pay an hourly rate for the cleaning.</p>
+              <p>Amsta Clean helps households in Amsterdam find affordable, reliable regular cleaners. Creating an account is free. With your first cleaning request you pay a monthly membership, which gives you a vetted regular cleaner, a backup cleaner for the days your regular cleaner is unavailable, and breakage cover. You then pay an hourly rate for the cleaning.</p>
               <p>For cleaners, we are a way to find regular customers near home. Cleaners join as independent freelancers, choose their own days and hours, and we find the households and make the match.</p>
             </div>
           </Reveal>
@@ -45,7 +45,7 @@ export default function About() {
       <Section tone="sand">
         <SectionTitle eyebrow="Two sides, one platform" title="Built for the people on both sides of the door." center />
         <div className="grid gap-6 md:grid-cols-2">
-          <Reveal><Card icon={HomeIcon} className="h-full"><h3 className="mb-2 text-2xl font-medium">For homeowners</h3><p className="mb-5 leading-relaxed text-muted">Create an account and tell us where you live. We find you a regular cleaner and a backup, and call you before the first visit.</p><Link href="/join" className="inline-flex items-center gap-1.5 font-semibold text-primary-dark underline-offset-4 hover:underline">I need regular cleaning <ArrowUpRight size={18} aria-hidden="true" /></Link></Card></Reveal>
+          <Reveal><Card icon={HomeIcon} className="h-full"><h3 className="mb-2 text-2xl font-medium">For homeowners</h3><p className="mb-5 leading-relaxed text-muted">Create a free account and request a cleaning when you need one. We find you a regular cleaner and a backup, and call you before the first visit.</p><Link href="/join" className="inline-flex items-center gap-1.5 font-semibold text-primary-dark underline-offset-4 hover:underline">Create free account <ArrowUpRight size={18} aria-hidden="true" /></Link></Card></Reveal>
           <Reveal delay={120}><Card icon={Sparkles} className="h-full"><h3 className="mb-2 text-2xl font-medium">For cleaners</h3><p className="mb-5 leading-relaxed text-muted">Apply, meet us on video, and we introduce you to households near you. You stay independent and choose your own availability.</p><Link href="/apply" className="inline-flex items-center gap-1.5 font-semibold text-primary-dark underline-offset-4 hover:underline">Work as a cleaner <ArrowUpRight size={18} aria-hidden="true" /></Link></Card></Reveal>
         </div>
       </Section>
@@ -57,7 +57,7 @@ export default function About() {
         </div>
       </Section>
 
-      <CtaBand title="Whichever side you are on, getting started is simple." primary={{ href: "/join", label: "I need regular cleaning" }} secondary={{ href: "/apply", label: "Work as a cleaner" }} />
+      <CtaBand title="Whichever side you are on, getting started is simple." primary={{ href: "/join", label: "Create free account" }} secondary={{ href: "/apply", label: "Work as a cleaner" }} />
     </main>
   );
 }
